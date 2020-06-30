@@ -7,11 +7,14 @@ class ProductHunt extends React.Component {
     state = {
         title: this.props.title || "",
         records: this.props.records || [],
-        likeHelperData: this.props.likeHelperData
+        likeHelperData: this.props.likeHelperData,
+        color: this.props.color || "",
+        logo: this.props.logo
     };
 
     render() {
-        const { title, records, likeHelperData } = this.state
+        console.log(this.state)
+        const { title, records, likeHelperData, color, logo } = this.state
         console.log("******* Records in template ")
         console.log(records)
         console.log("******* likeHelperData in template ")
@@ -23,10 +26,20 @@ class ProductHunt extends React.Component {
                     <div className="container">
                         <nav className="navbar navbar-expand-sm">
                             <a className="navbar-brand" href="#">
-                                <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M40 20c0 11.046-8.954 20-20 20S0 31.046 0 20 8.954 0 20 0s20 8.954 20 20" fill="#DA552F"></path><path d="M22.667 20H17v-6h5.667a3 3 0 0 1 0 6m0-10H13v20h4v-6h5.667a7 7 0 1 0 0-14" fill="#FFF"></path></g></svg>
+                                {logo && logo.length > 0 &&
+                                    <img src={logo[0].url} width="40" />
+                                }
+                                {!logo &&
+                                    <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                                        <g fill="none" fill-rule="evenodd">
+                                            <path d="M40 20c0 11.046-8.954 20-20 20S0 31.046 0 20 8.954 0 20 0s20 8.954 20 20" fill={color || "#DA552F"}></path>
+                                            <path d="M22.667 20H17v-6h5.667a3 3 0 0 1 0 6m0-10H13v20h4v-6h5.667a7 7 0 1 0 0-14" fill="#FFF"></path>
+                                        </g>
+                                    </svg>
+                                }
                             </a>
                             <div className="heading">
-                                <h3>{title}</h3>
+                                <h3 className="ml-2">{title}</h3>
                             </div>
                         </nav>
                     </div>

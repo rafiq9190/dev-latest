@@ -50,6 +50,7 @@ const ProjectPublicView = props => {
     const [settingsMetaKeywords, setSettingsMetaKeywords] = useState("");
     const [settingsPrimaryColor, setSettingsPrimaryColor] = useState();
     const [settingsFonts, setSettingsFonts] = useState();
+    const [settingsLogo, setSettingsLogo] = useState();
 
     React.useEffect(() => {
         firebase
@@ -97,6 +98,7 @@ const ProjectPublicView = props => {
                         records.forEach(function (record) {
                             let variable = record.get('setting');
                             let value = record.get('value');
+                            let attachment = record.get('attachment');
                             console.log(record)
                             console.log("++++++" + variable + " = " + value)
                             if (variable === "title") {
@@ -111,14 +113,18 @@ const ProjectPublicView = props => {
                                 setSettingsPrimaryColor(value);
                             } else if (variable === "fonts") {
                                 setSettingsFonts(value);
+                            } else if (variable === "logo") {
+                                setSettingsLogo(attachment);
                             }
                             console.log("+++++++++++++++++");
                             console.log(settingsPrimaryColor);
                             console.log(settingsFonts);
                         });
                         fetchNextPage();
+                        setLoading(false);
                     }, function done(err) {
                         if (err) { console.error("ERROR while fetching settings : " + err + ", So using default settings..."); return; }
+                        setLoading(false);
                     });
                 }
             }, [props.userid, props.slug]);
@@ -135,7 +141,7 @@ const ProjectPublicView = props => {
                 console.log("******* Votes data")
                 console.log(snapshotVal)
                 if (snapshotVal) setVotes(snapshotVal);
-                setLoading(false);
+                
             });
     };
 
@@ -203,16 +209,16 @@ const ProjectPublicView = props => {
                         </Alert>
                     }
 
-                    {!loading && !error && records.length > 0 && template === "template_002_producthunt" &&
-                        <ProductHuntTemplate title={title} records={records} likeHelperData={likeHelperData} />
+                    {!loading && !error && records.length > 0 && template === "template_002_producthunt" && 
+                        <ProductHuntTemplate title={settingsTitle || title} records={records} likeHelperData={likeHelperData} color={settingsPrimaryColor} logo={settingsLogo} />
                     }
 
                     {!loading && !error && records.length > 0 && template === "template_001_blog" &&
-                        <BlogTemplate title={title} records={records} likeHelperData={likeHelperData} />
+                        <BlogTemplate title={settingsTitle || title} records={records} likeHelperData={likeHelperData} />
                     }
 
                     {!loading && !error && records.length > 0 && template === "template_003_featurerequest" &&
-                        <FeatureRequestTemplate title={title} records={records} likeHelperData={likeHelperData} airtableApiKey={airtableApiKey} airtableBaseId={airtableBaseId} />
+                        <FeatureRequestTemplate title={settingsTitle || title} records={records} likeHelperData={likeHelperData} airtableApiKey={airtableApiKey} airtableBaseId={airtableBaseId} />
                     }
 
 
