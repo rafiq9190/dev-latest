@@ -61,7 +61,7 @@ const Projects = () => {
             {loading &&
                 <div className="text-center"><Loader type="Bars" color="#00BFFF" height={30} width={80} /></div>
             }
-            <Link to={`/app/project/create`} className="btn btn-primary">Create New Page...</Link>
+            <Link to={`/dashboard/page/create`} className="btn btn-primary">Create New Page...</Link>
             <Statistics />
             <h1 className="p-2">List of available Pages: </h1>
             <CardColumns>

@@ -7,17 +7,16 @@ import ProjectCreate from "../components/Projects/create"
 import Projects from "../components/Projects"
 import Login from "../components/Login"
 import PrivateRoute from "../components/PrivateRoute"
-import ProjectPublicView from "../components/Projects/publicview"
 
 const App = () => (
   <Layout>
     <Router>
-      <PrivateRoute path="/app/projects" component={Projects} />
-      <PrivateRoute path="/app/project/create" component={ProjectCreate} />
-      <PrivateRoute path="/app/profile" component={Profile} />
-      <PrivateRoute path="/app/activate" component={Activation} />
-      <Login path="/app/login" />
-      <ProjectPublicView path="/app/:userid/project/:slug" />
+      <PrivateRoute path="/dashboard/" component={Projects} />
+      <PrivateRoute path="/dashboard/pages" component={Projects} />
+      <PrivateRoute path="/dashboard/page/create" component={ProjectCreate} />
+      <PrivateRoute path="/dashboard/profile" component={Profile} />
+      <PrivateRoute path="/dashboard/activate" component={Activation} />
+      <Login path="/dashboard/login" />
     </Router>
   </Layout>
 )

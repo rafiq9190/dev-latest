@@ -8,7 +8,7 @@ const Index = () => {
   return (
   <Layout>
     {!isLoggedIn() && 
-      <Button variant="primary" href="/app/login">Login with Firebase</Button>
+      <Button variant="primary" href="/dashboard/login">Login with Firebase</Button>
     }
     <h1>HyperLyst Homepage</h1>
     <h2>This space is reserved for homepage of this site</h2>

@@ -4,9 +4,9 @@ import { navigate } from "gatsby"
 import { isLoggedIn } from "../utils/auth"
 
 const PrivateRoute = ({ component: Component, location, ...rest }) => {
-  if (!isLoggedIn() && location.pathname !== `/app/login`) {
+  if (!isLoggedIn() && location.pathname !== `/dashboard/login`) {
     // If we’re not logged in, redirect to the home page.
-    navigate(`/app/login`, { replace: true })
+    navigate(`/dashboard/login`, { replace: true })
     return null
   }
 

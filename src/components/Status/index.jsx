@@ -9,7 +9,7 @@ export default () => {
   if (!isLoggedIn()) {
     details = (
       <div className="text-right px-5">
-        <Link to="/app/login"><u>Log in</u></Link>
+        <Link to="/dashboard/login"><u>Log in</u></Link>
       </div>
     )
   } else {
@@ -19,7 +19,7 @@ export default () => {
         Logged in as {displayName} ({email}
         )!
         {` `}
-        <a href="/" onClick={event => { event.preventDefault(); logout(firebase).then(() => navigate(`/app/login`)) }}>
+        <a href="/" onClick={event => { event.preventDefault(); logout(firebase).then(() => navigate(`/dashboard/login`)) }}>
           <u>log out</u>
         </a>
       </div> 
