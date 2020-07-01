@@ -79,17 +79,6 @@ const ProjectPublicView = props => {
                     const base = new Airtable({ apiKey: snapshotVal.apiKey }).base(snapshotVal.baseId);
                     setAirtableApiKey(snapshotVal.apiKey)
                     setAirtableBaseId(snapshotVal.baseId)
-                    base(snapshotVal.tableName).select({
-                        view: viewName,
-                        filterByFormula: '{IsPublished}=1'
-                    }).eachPage(
-                        (records, fetchNextPage) => {
-                            setRecords(records);
-                            console.log("***** Found '" + records.length + "' records from Airtable");
-                            console.log(records)
-                            fetchNextPage();
-                        }
-                    ).then(getVotesData());
 
                     //Get "Settings" from Airtable
                     base('Settings').select({
@@ -121,11 +110,26 @@ const ProjectPublicView = props => {
                             console.log(settingsFonts);
                         });
                         fetchNextPage();
-                        setLoading(false);
+                        
                     }, function done(err) {
                         if (err) { console.error("ERROR while fetching settings : " + err + ", So using default settings..."); return; }
-                        setLoading(false);
+                        
                     });
+
+                    //get main data from Airtable
+                    base(snapshotVal.tableName).select({
+                        view: viewName,
+                        filterByFormula: '{IsPublished}=1'
+                    }).eachPage(
+                        (records, fetchNextPage) => {
+                            setRecords(records);
+                            console.log("***** Found '" + records.length + "' records from Airtable");
+                            console.log(records)
+                            fetchNextPage();
+                        }
+                    ).then(getVotesData());
+
+                    
                 }
             }, [props.userid, props.slug]);
     }, [loading, template]);
@@ -141,7 +145,7 @@ const ProjectPublicView = props => {
                 console.log("******* Votes data")
                 console.log(snapshotVal)
                 if (snapshotVal) setVotes(snapshotVal);
-                
+                setLoading(false);
             });
     };
 
