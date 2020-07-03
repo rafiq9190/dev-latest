@@ -9,6 +9,8 @@ import { Alert, Button, Card, CardColumns } from "react-bootstrap"
 import { RiDeleteBinLine } from "react-icons/ri"
 import Statistics from "../Statistics"
 import _ from "lodash"
+import Breadcrumb from "../Breadcrumb"
+import PageList from "../PageList"
 
 const Projects = () => {
     const user = getUser();
@@ -61,6 +63,9 @@ const Projects = () => {
             {loading &&
                 <div className="text-center"><Loader type="Bars" color="#00BFFF" height={30} width={80} /></div>
             }
+            <Breadcrumb />
+            <PageList />
+
             <Link to={`/dashboard/page/create`} className="btn btn-primary">Create New Page...</Link>
             <Statistics />
             <h1 className="p-2">List of available Pages: </h1>

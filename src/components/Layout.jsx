@@ -11,7 +11,7 @@ const Layout = ({ location, title, children }) => {
             <Helmet>
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
             </Helmet>
-            <Header />
+            <Header location={location} />
             <div className="mainWrapper">
                 <div className="dashboard_main">
                     <div className="container">
