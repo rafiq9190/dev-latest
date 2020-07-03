@@ -1,4 +1,5 @@
 import "./src/theme/bootstrap.min.css"
+import "./src/theme/admin.dashboard.styles.css"
 import "firebase/auth"
 import "firebase/firestore"
 import "firebase/database"
