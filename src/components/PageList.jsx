@@ -1,71 +1,29 @@
 import React from "react"
+import { Avatar } from "evergreen-ui"
 
-const PageList = () => {
+const PageList = ({projects}) => {
+
     return (
         <div className="row">
+            {projects && projects.map((project, index) => (
+                <div className="col col5">
+                    <div className="dashboard_box text-center">
+                        <a href="javascript:void(0)">
+                            <Avatar name={project.title} isSolid size={100} />
+                            <h3>{project.title}</h3>
+                        </a>
+                    </div>
+                </div>
+
+            ))}
             <div className="col col5">
                 <div className="dashboard_box text-center">
-                    <a href="javascript:void(0)">
-                        <img src="/images/icon-1.png" className="blue" />
-                        <h3>Product planning</h3>
+                    <a href="/dashboard/page/create">
+                        <Avatar name="+" color="neutral" size={100} />
+                        <h3>Add a page</h3>
                     </a>
                 </div>
             </div>
-
-            <div className="col col5">
-                <div className="dashboard_box text-center">
-                    <a href="javascript:void(0)">
-                        <img src="/images/icon-2.png" className="orange" />
-                        <h3>Product launch</h3>
-                    </a>
-                </div>
-            </div>
-
-            <div className="col col5">
-                <div className="dashboard_box text-center">
-                    <a href="javascript:void(0)">
-                        <img src="/images/icon-3.png" className="purple" />
-                        <h3>User research</h3>
-                    </a>
-                </div>
-            </div>
-
-            <div className="col col5">
-                <div className="dashboard_box text-center">
-                    <a href="javascript:void(0)">
-                        <img src="/images/icon-4.png" className="orange" />
-                        <h3>Sales CRM</h3>
-                    </a>
-                </div>
-            </div>
-
-            <div className="col col5">
-                <div className="dashboard_box text-center">
-                    <a href="javascript:void(0)">
-                        <img src="/images/icon-5.png" className="seagreen" />
-                        <h3>Content calender</h3>
-                    </a>
-                </div>
-            </div>
-
-            <div className="col col5">
-                <div className="dashboard_box text-center">
-                    <a href="javascript:void(0)">
-                        <img src="/images/icon-6.png" className="darkblue" />
-                        <h3>Project Tracker</h3>
-                    </a>
-                </div>
-            </div>
-
-            <div className="col col5">
-                <div className="dashboard_box text-center">
-                    <a href="javascript:void(0)">
-                        <img src="/images/icon-7.png" className="grey" />
-                        <h3>Add a site</h3>
-                    </a>
-                </div>
-            </div>
-
         </div>
     );
 }

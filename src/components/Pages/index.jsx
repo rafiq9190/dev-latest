@@ -64,7 +64,7 @@ const Projects = () => {
                 <div className="text-center"><Loader type="Bars" color="#00BFFF" height={30} width={80} /></div>
             }
             <Breadcrumb />
-            <PageList />
+            <PageList projects={projects} />
 
             <Link to={`/dashboard/page/create`} className="btn btn-primary">Create New Page...</Link>
             <Statistics />
