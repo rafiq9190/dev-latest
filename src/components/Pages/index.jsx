@@ -64,10 +64,10 @@ const Projects = () => {
                 <div className="text-center"><Loader type="Bars" color="#00BFFF" height={30} width={80} /></div>
             }
             <Breadcrumb />
+            <Statistics />
             <PageList projects={projects} />
 
             <Link to={`/dashboard/page/create`} className="btn btn-primary">Create New Page...</Link>
-            <Statistics />
             <h1 className="p-2">List of available Pages: </h1>
             <CardColumns>
                 {projects && projects.map((project, index) => (
