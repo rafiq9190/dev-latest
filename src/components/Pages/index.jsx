@@ -1,6 +1,7 @@
 import React from "react"
 import { useState } from "react"
 import { getUser, getUserExtras, getUserType } from "../../utils/auth"
+import { refreshUserExtras } from "../../utils/firebaseHelpers"
 import Loader from 'react-loader-spinner'
 import Statistics from "../Statistics"
 import _ from "lodash"
@@ -16,10 +17,18 @@ const Projects = () => {
     const [projects, setProjects] = useState([]);
 
     React.useEffect(() => {
+        if (loading && (!userExtras || !userExtras.projects)) {
+            refreshUserExtras(user);
+            userExtras = getUserExtras();
+            setTimeout(function () { //this is done so that userextras get loaded properly
+                setProjects(Object.values(userExtras.projects));
+                setLoading(false);
+            }, 2000);
+        }
         if (loading && !projects.length && userExtras && userExtras.projects) {
             setProjects(Object.values(userExtras.projects));
+            setLoading(false);
         }
-        setLoading(false);
     }, [loading, projects])
 
     return (

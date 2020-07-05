@@ -1,6 +1,5 @@
 import React from "react"
 import { navigate } from '@reach/router';
-import View from "./View"
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { setUser, setUserExtras, isLoggedIn } from "../utils/auth"
 import firebase from "gatsby-plugin-firebase"
@@ -22,7 +21,7 @@ const Login = () => {
       callbacks: {
         signInSuccessWithAuthResult: (result) => {
           firebase.database().ref('users/' + result.user.uid).once("value", snap => {
-            setUserExtras(snap.val() || {})            
+            setUserExtras(snap.val() || {})
           })
           setUser(result.user);
           navigate('/');
@@ -32,10 +31,17 @@ const Login = () => {
   }
 
   return (
-    <View title="Log In">
-      <p>Please sign-in to access the projects:</p>
-      {firebase && <StyledFirebaseAuth uiConfig={getUiConfig(firebase.auth)} firebaseAuth={firebase.auth()}/>}
-    </View>
+    <div className="container w-100 mx-auto">
+      <div className="row">
+        <div className="col-lg-2">&nbsp;</div>
+        <div className="col-lg-8 bg-light p-4">
+          <h1>Dashboard Login</h1>
+          <p>Please sign-in to access your pages:</p>
+          {firebase && <StyledFirebaseAuth uiConfig={getUiConfig(firebase.auth)} firebaseAuth={firebase.auth()} />}
+        </div>
+        <div className="col-lg-2">&nbsp;</div>
+      </div>
+    </div>
   );
 
 }

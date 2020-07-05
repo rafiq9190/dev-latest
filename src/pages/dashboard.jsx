@@ -3,6 +3,7 @@ import { Router } from "@reach/router"
 import Layout from "../components/Layout"
 import Profile from "../components/Profile"
 import Activation from "../components/Activation"
+import CustomDomain from "../components/CustomDomain"
 import PageCreate from "../components/Pages/create"
 import Pages from "../components/Pages"
 import Login from "../components/Login"
@@ -21,6 +22,7 @@ const Dashboard = ({location}) => {
           <PrivateRoute path="/dashboard/page/create" component={PageCreate} />
           <PrivateRoute path="/dashboard/profile" component={Profile} />
           <PrivateRoute path="/dashboard/activate" component={Activation} />
+          <PrivateRoute path="/dashboard/customdomain" component={CustomDomain} />
           <PrivateRoute path="/dashboard/logout" component={Logout} />
           <Login path="/dashboard/login" />
         </Router>

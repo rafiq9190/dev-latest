@@ -27,6 +27,9 @@ const Header = ({ location }) => {
                                     <Nav.Item as="li">
                                         <Link to="/dashboard/activate" className={`nav-link ${location.pathname === '/dashboard/activate' ? 'active' : ''}`}>Activation</Link>
                                     </Nav.Item>
+                                    {/*<Nav.Item as="li">
+                                        <Link to="/dashboard/customdomain" className={`nav-link ${location.pathname === '/dashboard/customdomain' ? 'active' : ''}`}>Add Custom Domain</Link>
+                                    </Nav.Item>*/}
                                     <Nav.Item as="li">
                                         <Link to="/dashboard/logout" className="nav-link">Logout</Link>
                                     </Nav.Item>

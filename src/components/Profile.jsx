@@ -4,6 +4,9 @@ import { getUser, getUserExtras, getUserType } from "../utils/auth"
 import { refreshUserExtras } from "../utils/firebaseHelpers"
 import firebase from "gatsby-plugin-firebase"
 import { Helmet } from 'react-helmet';
+import { navigate } from "gatsby"
+import { toaster } from "evergreen-ui"
+import Loader from 'react-loader-spinner'
 
 const Profile = () => {
   const user = getUser();
@@ -17,6 +20,8 @@ const Profile = () => {
   const { email, emailVerified } = user;
   const displayName = user.displayName ? user.displayName : "Name not captured";
 
+  const [processing, setProcessing] = React.useState(false);
+
   const unpublishAllPages = () => {
     Object.values(userExtras.projects).map((project) => {
       firebase
@@ -24,18 +29,22 @@ const Profile = () => {
         .ref()
         .child(`users/${user.uid}/projects/${project.slug}/published`)
         .set(false)
-        .then(()=>{refreshUserExtras(user);console.log('Unpublised = '+project.slug);})
+        .then(() => { refreshUserExtras(user); console.log('Unpublised = ' + project.slug); })
+        .then(() => { toaster.warning("'" + project.slug + "' page unpublished successfully.", { id: "page-unpublish" }) })
     })
   };
 
   const cancelSubscription = () => {
-    unpublishAllPages(); 
+    setProcessing(true);
+    unpublishAllPages();
     firebase
       .database()
       .ref()
       .child(`users/${user.uid}/subscription`)
       .remove()
-      .then(() => {refreshUserExtras(user); alert('Subscription Cancelled Successfully..!!'); window.location.reload(); })
+      .then(() => { refreshUserExtras(user); })
+      .then(() => { toaster.success('Subscription cancelled successfully. You will be redirected to Dashboard in 5 seconds') })
+      .then(() => { setTimeout(function () { setProcessing(false); navigate(`/dashboard/`, { replace: true }) }, 5000); })
   };
 
   return (
@@ -58,7 +67,7 @@ const Profile = () => {
           <div className="p-2 bg-white">{`${plan}`}</div>
           {plan && plan === "free" &&
             <div className="py-3">
-              <a className="btn btn-success" href="https://gum.co/WHvhf?wanted=true" target="_blank" data-gumroad-single-product="true">Subscribe with us</a>
+              <a className="btn btn-success btn-sm" href="https://gum.co/WHvhf?wanted=true" target="_blank" data-gumroad-single-product="true">Subscribe with us</a>
             </div>
           }
           {plan && plan !== "free" &&
@@ -68,6 +77,7 @@ const Profile = () => {
               <div className="py-3">
                 <button className="btn btn-danger btn-sm" onClick={() => { cancelSubscription() }}>
                   Cancel your subscription
+                  {processing && <Loader type="Bars" color="#FFF" className="d-inline" height={16} width={24} />}
                 </button>
               </div>
             </>

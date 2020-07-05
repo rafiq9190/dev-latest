@@ -1,10 +1,10 @@
 import React from "react"
-import { Avatar, SideSheet, IconButton, Alert, Spinner, toaster, Pane, Heading, Text, Button, Badge } from "evergreen-ui"
+import { Avatar, SideSheet, IconButton, Alert, Pill, toaster, Pane, Heading, Text, Button, Badge } from "evergreen-ui"
 import _ from 'lodash'
 import { getUser, getUserExtras, getUserType } from "../utils/auth"
 import { refreshUserExtras } from "../utils/firebaseHelpers"
 import firebase from "gatsby-plugin-firebase"
-
+import Loader from 'react-loader-spinner'
 
 const PageList = ({ projects }) => {
 
@@ -18,7 +18,6 @@ const PageList = ({ projects }) => {
 
     const [isDetailsShown, setIsDetailsShown] = React.useState(false);
     const [publishProcessing, setPublishProcessing] = React.useState(false);
-    const [deleteProcessing, setDeleteProcessing] = React.useState(false);
     const [pageDetails, setPageDetails] = React.useState();
 
     let bgColors = ["id_170", "id_174", "id_177", "id_173", "id_175", "id_171"]
@@ -57,14 +56,13 @@ const PageList = ({ projects }) => {
             .child(`users/${user.uid}/projects/${slug}/published`)
             .set(newstate)
             .then(() => { refreshUserExtras(user); })
-            .then(() => {setPublishProcessing(false)})
+            .then(() => { setPublishProcessing(false) })
             .then(() => { toaster.success('Page ' + (newstate ? '' : 'un') + 'published successfully. Page will reload in 5 seconds to refresh the data') })
             .then(() => { setTimeout(function () { window.location.reload(); }, 5000); })
     };
 
     const deleteProject = (slug) => {
         console.log("*********** deleteProject")
-        setDeleteProcessing(true);
         console.log(`users/${user.uid}/projects/${slug}`)
         firebase
             .database()
@@ -72,7 +70,7 @@ const PageList = ({ projects }) => {
             .child(`users/${user.uid}/projects/${slug}`)
             .remove()
             .then(() => { refreshUserExtras(user); })
-            .then(() => {setDeleteProcessing(false); setIsDetailsShown(false);})
+            .then(() => { setIsDetailsShown(false); })
             .then(() => { toaster.success('Deletion successfully. Page will reload in 5 seconds to refresh the data') })
             .then(() => { setTimeout(function () { window.location.reload(); }, 5000); })
     };
@@ -84,6 +82,9 @@ const PageList = ({ projects }) => {
                     <div className="dashboard_box text-center">
                         <a href="javascript:void(0)" onClick={() => showPageDetails(project)}>
                             <Avatar name={project.title} hashValue={bgColors[index % 6]} isSolid size={100} style={{ borderRadius: "12px" }} />
+                            {project.published &&
+                                <Pill display="inline-flex" color="green" isSolid style={{ color: "#47b881" }}>.</Pill>
+                            }
                             <h3>{project.title}</h3>
                         </a>
                     </div>
@@ -108,7 +109,7 @@ const PageList = ({ projects }) => {
                 onCloseComplete={() => setIsDetailsShown(false)}
             >
                 <Pane display="flex" margin={10} flexDirection="column">
-                    <Heading size={500} marginBottom={5}>{pageDetails && pageDetails.title}</Heading>
+                    <Heading size={600} marginBottom={5}>{pageDetails && pageDetails.title}</Heading>
                     <Pane>
                         {pageDetails && pageDetails.published &&
                             <>
@@ -118,7 +119,7 @@ const PageList = ({ projects }) => {
                                 />
                                 <Button height={24} iconBefore="cloud-download" appearance="primary" intent="warning" onClick={() => { changePagePublishState(pageDetails.slug, false) }}>
                                     UnPublish Now
-                                    {publishProcessing && <Spinner size={16} />}
+                                    {publishProcessing && <Loader type="Bars" color="#FFF" height={16} width={24} />}
                                 </Button>
                             </>
                         }
@@ -130,11 +131,11 @@ const PageList = ({ projects }) => {
                                 />
                                 <Button height={24} iconBefore="cloud-upload" appearance="primary" intent="primary" onClick={() => { changePagePublishState(pageDetails.slug, true) }}>
                                     Publish Now
-                                    {publishProcessing && <Spinner size={16} />}
+                                    {publishProcessing && <Loader type="Bars" color="#FFF" height={16} width={24} />}
                                 </Button>
                             </>
                         }
-                        <Button height={24} marginLeft={15} iconBefore="link" appearance="primary" intent="success" onClick={() => {window.open(`${publicdomain}/public/${user.uid}/project/${pageDetails.slug}`,'_blank')}}>
+                        <Button height={24} marginLeft={15} iconBefore="link" appearance="primary" intent="success" onClick={() => { window.open(`${publicdomain}/public/${user.uid}/project/${pageDetails.slug}`, '_blank') }}>
                             Public URL
                         </Button>
                     </Pane>
@@ -142,15 +143,15 @@ const PageList = ({ projects }) => {
 
                 <Pane display="flex" marginLeft={10} marginRight={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
                     <Pane display="flex" float="left" flexDirection="column">
-                        <Heading size={400}>Project Template Code</Heading>
-                        <Text size={300} marginBottom={5}>{pageDetails && pageDetails.selectedTemplate}</Text>
-                        <Heading size={400}>Airtable API Key</Heading>
-                        <Text size={300} marginBottom={5}>{pageDetails && pageDetails.apiKey}</Text>
-                        <Heading size={400}>Airtable Base ID</Heading>
-                        <Text size={300} marginBottom={5}>{pageDetails && pageDetails.baseId}</Text>
-                        <Heading size={400}>Airtable Table Name</Heading>
-                        <Text size={300} marginBottom={5}>{pageDetails && pageDetails.tableName}</Text>
-                        <Heading size={400}>Airtable View Name</Heading>
+                        <Heading size={500}>Project Template Code</Heading>
+                        <Text size={400} marginBottom={10}>{pageDetails && pageDetails.selectedTemplate}</Text>
+                        <Heading size={500}>Airtable API Key</Heading>
+                        <Text size={400} marginBottom={10}>{pageDetails && pageDetails.apiKey}</Text>
+                        <Heading size={500}>Airtable Base ID</Heading>
+                        <Text size={400} marginBottom={10}>{pageDetails && pageDetails.baseId}</Text>
+                        <Heading size={500}>Airtable Table Name</Heading>
+                        <Text size={400} marginBottom={10}>{pageDetails && pageDetails.tableName}</Text>
+                        <Heading size={500}>Airtable View Name</Heading>
                         <Text size={300}>{pageDetails && pageDetails.viewName}</Text>
                     </Pane>
                 </Pane>
