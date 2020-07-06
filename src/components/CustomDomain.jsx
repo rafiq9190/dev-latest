@@ -9,10 +9,10 @@ import NetlifyAPI from 'netlify'
 
 const CustomDomain = () => {
   const user = getUser();
-  const userExtras = getUserExtras();
+  const userExtras = getUserExtras();  
   const plan = getUserType();
   const { email } = user;
-
+  
   const [validated, setValidated] = React.useState(false);
   const [processing, setProcessing] = React.useState(false);
   const [newCustomDomain, setNewCustomDomain] = React.useState("");
@@ -42,12 +42,12 @@ const CustomDomain = () => {
   async function addDomainToNetlifySite() {
     const client = new NetlifyAPI(process.env.GATSBY_NETLIFY_API_TOKEN)
     try {
+      let updatedDomainAliases = existingDomains;
+      updatedDomainAliases.push(newCustomDomain);
       await client.updateSite({
         site_id: netlifySite.site_id,
         body: {
-          "domain_aliases": [
-            newCustomDomain
-          ]
+          "domain_aliases": updatedDomainAliases
         }
       })
       console.log("Domain successfully added to Netlify")
@@ -126,10 +126,10 @@ const CustomDomain = () => {
               </Alert>
               <Pane display="flex" flexDirection="column" marginTop={20} padding={10} background="tealTint" borderRadius={3} elevation={4}>
                 <Heading size={600} marginBottom={15}>DNS Configuration<span>*</span></Heading>
-                <Heading size={500} marginBottom={10}>Point testcustom1 CNAME record to hyperlyst-sites.netlify.app</Heading>
+                <Heading size={500} marginBottom={10}>Point {userExtras.custom_domain.split(".")[0]} CNAME record to hyperlyst-sites.netlify.app</Heading>
                 <Text size={400} marginBottom={10}>Log in to the account you have with your DNS provider, and add a CNAME record for testcustom1 pointing to hyperlyst-sites.netlify.app.</Text>
-                <kbd className="p-3">testcustom1 CNAME hyperlyst-sites.netlify.app.</kbd>
-                <Text size={400} marginBottom={10} marginTop={10}>If you’ve already done this, allow up to 24 hours for the changes to propagate.</Text>
+                <kbd className="p-3">{userExtras.custom_domain.split(".")[0]} CNAME hyperlyst-sites.netlify.app.</kbd>
+                <Text size={400} marginBottom={10} marginTop={10}>If you’ve already done this, allow up to 24 hours for the changes to propagate or check our <a href="https://docs.netlify.com/domains-https/custom-domains/configure-external-dns/#configure-a-subdomain" target="_blank">documentation</a> for more information.</Text>
                 <Text size={300} className="text-primary">* Completion of this step is very important else your pages wont be accessible via your custom domain</Text>
               </Pane>
             </>
