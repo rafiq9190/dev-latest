@@ -139,11 +139,11 @@ const CustomDomain = () => {
             <div>
               <h5 className="mt-3 mb-1">Your Email</h5>
               <div className="p-2 bg-white">{`${email}`}</div>
-              <h5 className="mt-3 mb-1">Enter your domain url here</h5>
+              <h5 className="mt-3 mb-1">Enter your domain or sub-domain url here</h5>
               <Form noValidate validated={validated} onSubmit={handleSubmit}>
                 <Form.Control
                   type="text"
-                  placeholder="www.????????????.com"
+                  placeholder="Domain/Subdomain URL"
                   onChange={({ target: { value } }) => {
                     setNewCustomDomain(value);
                   }}
