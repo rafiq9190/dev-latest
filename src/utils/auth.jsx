@@ -29,24 +29,23 @@ export const getUserType = () => {
     let checkPassed = true;
     //checking if product id is correct    
     if(userExtras.subscription.license.purchase.product_id && userExtras.subscription.license.purchase.product_id==="6wQEQAPjjNzLjrj04W9jmA==") {
-      console.log("+++++++ product_id = "+userExtras.subscription.license.purchase.product_id)
+      //console.log("+++++++ product_id = "+userExtras.subscription.license.purchase.product_id)
       checkPassed = checkPassed && true;
-      console.log("*** "+checkPassed)
-
+      //console.log("*** "+checkPassed)
     }
     //checking if the subscription is not cancelled
     if(userExtras.subscription.license.purchase.subscription_cancelled_at) {
-      console.log("+++++++ subscription_cancelled_at = "+userExtras.subscription.license.purchase.subscription_cancelled_at)
+      //console.log("+++++++ subscription_cancelled_at = "+userExtras.subscription.license.purchase.subscription_cancelled_at)
       checkPassed = checkPassed && false;
-      console.log("*** "+checkPassed)
+      //console.log("*** "+checkPassed)
     }
     //checking if the monthly cycle has ended
     if(userExtras.subscription.license.purchase.sale_timestamp) {      
       let saleDate = new Date(userExtras.subscription.license.purchase.sale_timestamp);
       let oneMonth = new Date(saleDate.setMonth(saleDate.getMonth()+1));
-      console.log("+++++++ sale_timestamp = "+userExtras.subscription.license.purchase.sale_timestamp)
+      //console.log("+++++++ sale_timestamp = "+userExtras.subscription.license.purchase.sale_timestamp)
       checkPassed = checkPassed && (oneMonth >= new Date());
-      console.log("*** "+checkPassed)
+      //console.log("*** "+checkPassed)
     }
     if(checkPassed) {
       userType = "paid";

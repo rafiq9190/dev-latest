@@ -11,7 +11,7 @@ const PageList = ({ projects }) => {
     const user = getUser();
     let userExtras = getUserExtras();
     const plan = getUserType();
-    const publicdomain = userExtras.domain ? userExtras.domain : "https://sites.hyperlyst.com"
+    const publicdomain = userExtras.custom_domain ? ("http://"+userExtras.custom_domain) : "https://sites.hyperlyst.com"
 
     const publishedCount = (userExtras && userExtras.projects) ? _.filter(userExtras.projects, { published: true }).length : 0;
     const MaxProjectsInFreePlan = 3;

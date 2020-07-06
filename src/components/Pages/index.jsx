@@ -18,12 +18,14 @@ const Projects = () => {
 
     React.useEffect(() => {
         if (loading && (!userExtras || !userExtras.projects)) {
-            refreshUserExtras(user);
-            userExtras = getUserExtras();
+            refreshUserExtras(user);            
             setTimeout(function () { //this is done so that userextras get loaded properly
-                setProjects(Object.values(userExtras.projects));
+                userExtras = getUserExtras();
+                if (userExtras && userExtras.projects) {
+                    setProjects(Object.values(userExtras.projects));
+                }
                 setLoading(false);
-            }, 2000);
+            }, 3000);
         }
         if (loading && !projects.length && userExtras && userExtras.projects) {
             setProjects(Object.values(userExtras.projects));
