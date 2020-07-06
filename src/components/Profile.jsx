@@ -63,6 +63,8 @@ const Profile = () => {
           <div className="p-2 bg-white">{`${email}`}</div>
           <h5 className="mt-3 mb-1">Email Verified</h5>
           <div className="p-2 bg-white">{`${emailVerified}`}</div>
+          <h5 className="mt-3 mb-1">Custom Domain</h5>
+          <div className="p-2 bg-white">{`${userExtras.custom_domain}`}</div>
           <h5 className="mt-3 mb-1">Plan</h5>
           <div className="p-2 bg-white">{`${plan}`}</div>
           {plan && plan === "free" &&
