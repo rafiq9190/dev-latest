@@ -16,7 +16,7 @@ const Breadcrumb = () => {
                 <h4>Dashboard</h4>
 
                 <ul className="breadcm_rigth">
-                    <li><a href="javascript:void(0)" className="free">{_.capitalize(plan)}</a></li>
+                    {/*<li><a href="javascript:void(0)" className="free">{_.capitalize(plan)}</a></li>*/}
                     {plan && plan === 'free' &&
                         <li><a href="https://gum.co/WHvhf?wanted=true" target="_blank" data-gumroad-single-product="true" className="upgrade">UPGRADE</a></li>
                     }
@@ -24,9 +24,6 @@ const Breadcrumb = () => {
             </div>
 
             <ul className="breadcm_rigth">
-                {isLoggedIn() &&
-                    <li><a href="/dashboard/profile" className="user" title={loggedInUser && (loggedInUser.displayname || loggedInUser.email)}><i className="fa fa-user"></i></a></li>
-                }
                 <li><a href="javascript:void(0)" className="share">SHARE</a></li>
             </ul>
         </div>

@@ -106,7 +106,8 @@ const CustomDomain = () => {
       <div className="row">
         <div className="col-lg-2">&nbsp;</div>
         <div className="col-lg-8 bg-light p-4">
-          <h2>Custom Domain Configuration Service</h2>
+          <h2>Connect your own domain</h2>
+          <h5>Publish sites to any custom domains you own with full SSL suupport</h5>
           {plan && plan === "free" &&
             <Alert
               intent="danger"

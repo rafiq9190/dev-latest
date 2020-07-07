@@ -39,7 +39,6 @@ const Projects = () => {
                 <div className="text-center"><Loader type="Bars" color="#00BFFF" height={30} width={80} /></div>
             }
             <Breadcrumb />
-            <Statistics />
             <PageList projects={projects} />
         </>
     )

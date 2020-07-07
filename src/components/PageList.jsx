@@ -94,7 +94,7 @@ const PageList = ({ projects }) => {
                 <div className="dashboard_box text-center">
                     <a href="/dashboard/page/create">
                         <Avatar name="+" color="neutral" size={100} />
-                        <h3>Add a page</h3>
+                        <h3>Add a Site</h3>
                     </a>
                 </div>
             </div>

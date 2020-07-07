@@ -82,7 +82,7 @@ const Activation = () => {
       <div className="row">
         <div className="col-lg-2">&nbsp;</div>
         <div className="col-lg-8 bg-light p-4">
-          <h1>Subscription Activation Service</h1>
+          <h1>Manage Activations</h1>
           {plan && plan !== "free" &&
             <h5>You are already having an active subscription till {subscriptionEndDate.toString()}</h5>
           }
