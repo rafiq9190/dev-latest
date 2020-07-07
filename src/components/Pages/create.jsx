@@ -35,6 +35,8 @@ const ProjectCreate = ({ location }) => {
 
     const [templates, setTemplates] = useState([]);
     const [options, setOptions] = useState([]);
+    const [selectPlaceholder, setSelectPlaceholder] = useState("Loading options...")
+    const [selectDisabled, setSelectDisabled] = useState(true)
 
     const [selectedTemplate, setSelectedTemplate] = useState("");
     const [mandatoryFields, setMandatoryFields] = useState("");
@@ -72,6 +74,8 @@ const ProjectCreate = ({ location }) => {
                     //options1.push(dropDownEle);
 
                     setTemplates(snapshotVal);
+                    setSelectPlaceholder("Select...")
+                    setSelectDisabled(false);
                     setLoading(false);
                     console.log(templates);
                 }); //end of loading of all templates            
@@ -156,6 +160,8 @@ const ProjectCreate = ({ location }) => {
                                                 name="templateselect"
                                                 options={options}
                                                 onChange={handleSelectOnchange}
+                                                placeholder={selectPlaceholder}
+                                                isDisabled={selectDisabled}
                                             />
                                         </div>
                                         <div className="pt-2">

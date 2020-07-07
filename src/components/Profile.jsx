@@ -22,6 +22,16 @@ const Profile = () => {
 
   const [processing, setProcessing] = React.useState(false);
 
+  const removeCustomDomain = () => {
+      firebase
+        .database()
+        .ref()
+        .child(`users/${user.uid}/custom_domain`)
+        .remove()
+        .then(() => { refreshUserExtras(user); console.log('Custom domain removed'); })
+        .then(() => { toaster.warning("Custom domain removed successfully.", { id: "page-unpublish" }) })
+  };
+
   const unpublishAllPages = () => {
     Object.values(userExtras.projects).map((project) => {
       firebase
@@ -36,6 +46,7 @@ const Profile = () => {
 
   const cancelSubscription = () => {
     setProcessing(true);
+    removeCustomDomain();
     unpublishAllPages();
     firebase
       .database()
