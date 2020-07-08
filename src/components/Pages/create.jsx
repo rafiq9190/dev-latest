@@ -83,16 +83,7 @@ const ProjectCreate = ({ location }) => {
 
                 <Pane display="flex" marginLeft={10} marginRight={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
                     <Pane display="flex" float="left" flexDirection="column">
-                        <Heading size={500}>Project Template Code</Heading>
-                        <Text size={400} marginBottom={10}>pageDetails.selectedTemplate</Text>
-                        <Heading size={500}>Airtable API Key</Heading>
-                        <Text size={400} marginBottom={10}>pageDetails.apiKey</Text>
-                        <Heading size={500}>Airtable Base ID</Heading>
-                        <Text size={400} marginBottom={10}>pageDetails.baseId</Text>
-                        <Heading size={500}>Airtable Table Name</Heading>
-                        <Text size={400} marginBottom={10}>pageDetails.tableName</Text>
-                        <Heading size={500}>Airtable View Name</Heading>
-                        <Text size={300}>pageDetails.viewName</Text>
+                        <Heading size={500}>Form to capture other details will come here</Heading>
                     </Pane>
                 </Pane>
 
