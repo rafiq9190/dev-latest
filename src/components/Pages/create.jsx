@@ -98,28 +98,30 @@ const ProjectCreate = ({ location }) => {
                     </Pane>
                 </Pane>
 
-                <Pane display="flex" margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
-                    <Pane display="flex" float="left" flexDirection="column">
-                        <Heading size={500}>Step.2</Heading>
-                        <TextInputField
-                            label="Enter your Airtable API Key"
-                            description=""
-                            placeholder="Airtable API Key"
-                            required
-                        />
-                    </Pane>
-                </Pane>
-
-                <Pane display="flex" margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
-                    <Pane display="flex" float="left" flexDirection="column">
-                        <Heading size={500}>Step.3</Heading>                        
-                        <Pane display="flex" marginTop={10}>
+                <Pane display="flex">
+                    <Pane display="flex" margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
+                        <Pane display="flex" float="left" flexDirection="column">
+                            <Heading size={500}>Step.2</Heading>
                             <TextInputField
-                                label="Enter your Airtable Base ID"
-                                hint="Use help button to know from where to get your Airtable Base ID "
-                                placeholder="Airtable Base ID"
+                                label="Enter your Airtable API Key"
+                                description=""
+                                placeholder="Airtable API Key"
                                 required
-                            />                            
+                            />
+                        </Pane>
+                    </Pane>
+
+                    <Pane display="flex" margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
+                        <Pane display="flex" float="left" flexDirection="column">
+                            <Heading size={500}>Step.3</Heading>
+                            <Pane display="flex" marginTop={10}>
+                                <TextInputField
+                                    label="Enter your Airtable Base ID"
+                                    hint="Use help button to know from where to get your Airtable Base ID "
+                                    placeholder="Airtable Base ID"
+                                    required
+                                />
+                            </Pane>
                         </Pane>
                     </Pane>
                 </Pane>
@@ -127,20 +129,23 @@ const ProjectCreate = ({ location }) => {
                 <Pane display="flex" margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
                     <Pane display="flex" float="left" flexDirection="column">
                         <Heading size={500}>Step.4</Heading>
-                        <TextInputField
-                            label="Enter Page Title"
-                            placeholder="Page Title"
-                            required
-                        />
-                        <TextInputField
-                            label="Your Page Slug"
-                            disabled
-                            required
-                        />
+                        <Pane display="flex">
+                            <TextInputField
+                                label="Enter Page Title"
+                                placeholder="Page Title"
+                                required
+                                marginRight={10}
+                            />
+                            <TextInputField
+                                label="Your Page Slug"
+                                disabled
+                                required
+                            />
+                        </Pane>
                     </Pane>
                 </Pane>
 
-                <Pane margin={10} padding={10}>
+                <Pane marginLeft={10}>
                     <Button appearance="primary" intent="success" onClick={() => { }}>
                         Create Page
                     </Button>
