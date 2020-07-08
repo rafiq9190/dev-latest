@@ -32,7 +32,7 @@ const ProjectCreate = ({ location }) => {
         { title: "Template-10" },
         { title: "Template-11" }
     ];
-
+    setLoading(false);
 
     return (
         <>
