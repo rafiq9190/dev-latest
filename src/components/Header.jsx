@@ -31,7 +31,7 @@ const Header = ({ location }) => {
                                         <Link to="/dashboard/customdomain" className={`nav-link ${location.pathname === '/dashboard/customdomain' ? 'active' : ''}`}>Add Custom Domain</Link>
                                     </Nav.Item>
                                     <Nav.Item as="li">
-                                        <a href="https://www.airtable.com" className={`nav-link`} target="_blank">Go to Airtable</a>
+                                        <a href="https://www.airtable.com" className={`nav-link`} target="_blank">Airtable</a>
                                     </Nav.Item>
                                     <Nav.Item as="li">
                                         <Link to="/dashboard/logout" className="nav-link">Logout</Link>
