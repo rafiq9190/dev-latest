@@ -92,7 +92,7 @@ const PageList = ({ projects }) => {
             ))}
             <div className="col col5">
                 <div className="dashboard_box text-center">
-                    <a href="/dashboard/page/create">
+                    <a href="/dashboard/page/select">
                         <Avatar name="+" color="neutral" size={100} />
                         <h3>Add a Site</h3>
                     </a>

@@ -5,6 +5,7 @@ import Profile from "../components/Profile"
 import Activation from "../components/Activation"
 import CustomDomain from "../components/CustomDomain"
 import PageCreate from "../components/Pages/create"
+import TemplateSelect from "../components/Pages/select"
 import PageCreateOld from "../components/Pages/create-bkup"
 import Pages from "../components/Pages"
 import Login from "../components/Login"
@@ -19,7 +20,8 @@ const Dashboard = ({location}) => {
       {isBrowser() &&
         <Router>
           <PrivateRoute path="/dashboard/" component={Pages} />
-          <PrivateRoute path="/dashboard/pages" component={Pages} />
+          <PrivateRoute path="/dashboard/pages" component={Pages} />          
+          <PrivateRoute path="/dashboard/page/select" component={TemplateSelect} />
           <PrivateRoute path="/dashboard/page/create" component={PageCreate} />
           <PrivateRoute path="/dashboard/page/createold" component={PageCreateOld} />
           <PrivateRoute path="/dashboard/profile" component={Profile} />
