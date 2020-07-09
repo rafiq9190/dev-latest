@@ -19,7 +19,7 @@ const ProjectCreate = ({ location }) => {
                 <div className="row">
                     <div className="col mb-3">
                         <Pane display="flex" margin={10} flexDirection="column">
-                            <Heading size={600} marginBottom={5}>Selected Template : {selectedTemplate && selectedTemplate.title}</Heading>
+                            <Heading size={600} marginBottom={5}>Selected Template : {selectedTemplate && selectedTemplate.name}</Heading>
                         </Pane>
 
                         <Pane display="flex" margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
