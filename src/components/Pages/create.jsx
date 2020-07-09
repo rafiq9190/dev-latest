@@ -1,8 +1,5 @@
 import React from "react"
-import styled from "styled-components"
-import Loader from 'react-loader-spinner'
-import { Card } from 'react-bootstrap'
-import { CornerDialog, IconButton, toaster, Pane, Heading, Text, TextInputField, Button, Badge } from "evergreen-ui"
+import { CornerDialog, IconButton, toaster, Pane, Heading, Text, TextInputField, Button } from "evergreen-ui"
 
 const ProjectCreate = ({ location }) => {
     const { state = {} } = location

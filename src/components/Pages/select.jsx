@@ -1,17 +1,28 @@
 import React from "react"
 import { navigate } from "gatsby"
-import styled from "styled-components"
+import firebase from "gatsby-plugin-firebase"
 import Loader from 'react-loader-spinner'
 import { Card } from 'react-bootstrap'
-import { SideSheet, IconButton, toaster, Pane, Heading, Text, TextInputField, Button, Badge } from "evergreen-ui"
+import { IconButton, toaster, Pane, Heading, Text, Button, Badge } from "evergreen-ui"
 
 const TemplateSelect = ({ location }) => {
 
     const [loading, setLoading] = React.useState(true);
+    const [templates, setTemplates] = React.useState([]);
 
     React.useEffect(() => {
-
-    })
+        if (loading && !templates.length) {
+            firebase
+                .database()
+                .ref(`templates`)
+                .once("value")
+                .then(snapshot => {
+                    setTemplates(snapshot.val());
+                    setLoading(false);
+                    console.log(templates);
+                }); //end of loading of all templates            
+        }
+    }, [loading, templates])
 
     const dummyData = [
         { title: "Template-1" },
@@ -34,16 +45,16 @@ const TemplateSelect = ({ location }) => {
             }
             <div className="container m-2">
                 <div className="row">
-                    {dummyData.map((item) => (
+                    {templates && Object.values(templates).map((item) => (
                         <div className="col-lg-4 mb-3">
                             <Card>
-                                <Card.Img variant="top" src={`https://source.unsplash.com/180x180/?abstract,pattern,macro${item.title}`} />
+                                <Card.Img variant="top" height="280px" style={{objectFit: 'cover'}} src={`/images/${item.id}.png`} />
                                 <Card.Body>
-                                    <Card.Title>{item.title}</Card.Title>
-                                    <Button height={32} marginRight={16} iconBefore="applications" appearance="primary" intent="success" onClick={() => navigate("/dashboard/page/create",{state:{template:item}}) }>
+                                    <Card.Title>{item.name}</Card.Title>
+                                    <Button height={32} marginRight={16} iconBefore="applications" appearance="primary" intent="success" onClick={() => navigate("/dashboard/page/create", { state: { template: item } })}>
                                         Select
                                     </Button>
-                                    <Button height={32} iconAfter="share">
+                                    <Button height={32} iconAfter="share" onClick={() => { window.open(item.demoURL, '_blank') }}>
                                         Demo
                                     </Button>
                                 </Card.Body>
