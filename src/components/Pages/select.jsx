@@ -3,7 +3,7 @@ import { navigate } from "gatsby"
 import firebase from "gatsby-plugin-firebase"
 import Loader from 'react-loader-spinner'
 import { Card } from 'react-bootstrap'
-import { IconButton, toaster, Pane, Heading, Text, Button, Badge } from "evergreen-ui"
+import { IconButton, toaster, Pane, Heading, Text, Button, Pill } from "evergreen-ui"
 
 const TemplateSelect = ({ location }) => {
 
@@ -24,20 +24,6 @@ const TemplateSelect = ({ location }) => {
         }
     }, [loading, templates])
 
-    const dummyData = [
-        { title: "Template-1" },
-        { title: "Template-2" },
-        { title: "Template-3" },
-        { title: "Template-4" },
-        { title: "Template-5" },
-        { title: "Template-6" },
-        { title: "Template-7" },
-        { title: "Template-8" },
-        { title: "Template-9" },
-        { title: "Template-10" },
-        { title: "Template-11" }
-    ];
-
     return (
         <>
             {loading &&
@@ -48,7 +34,8 @@ const TemplateSelect = ({ location }) => {
                     {templates && Object.values(templates).map((item) => (
                         <div className="col-lg-4 mb-3">
                             <Card>
-                                <Card.Img variant="top" height="280px" style={{objectFit: 'cover'}} src={`/images/${item.id}.png`} />
+                                <Card.Img variant="top" height="280px" style={{ objectFit: 'cover' }} src={`/images/${item.id}.png`} />
+                                <Pane marginLeft={5}><Pill color={item.type && item.type.toLowerCase()=="paid"?"purple":"yellow"}>{item.type||"Free"}</Pill></Pane>
                                 <Card.Body>
                                     <Card.Title>{item.name}</Card.Title>
                                     <Button height={32} marginRight={16} iconBefore="applications" appearance="primary" intent="success" onClick={() => navigate("/dashboard/page/create", { state: { template: item } })}>
