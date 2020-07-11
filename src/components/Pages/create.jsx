@@ -1,5 +1,5 @@
 import React from "react"
-import { CornerDialog, IconButton, toaster, Pane, Heading, Text, TextInputField, Button } from "evergreen-ui"
+import { Dialog, Position, Icon, toaster, Pane, Heading, Text, TextInputField, Button } from "evergreen-ui"
 import _ from 'lodash'
 import { Form } from 'react-bootstrap'
 import { getUser, getUserExtras, getUserType } from "../../utils/auth"
@@ -100,10 +100,10 @@ const PageCreate = ({ location }) => {
                                     <Pane display="flex">
                                         <Button appearance="primary" iconAfter="share" marginTop={10} onClick={() => { window.open(selectedTemplate.airtableBaseCopy, '_blank') }}>
                                             Copy Template Base
-                                            </Button>
+                                        </Button>
                                     </Pane>
                                 </Pane>
-                                <IconButton height={40} marginLeft={5} icon="help" title="Click to see more details" appearance="minimal" onClick={() => setIsStep1HelpShown(true)} />
+                                <Icon size={32} style={{cursor: "hand"}} marginLeft={5} icon="help" title="Click to see more details" color="muted" onClick={() => setIsStep1HelpShown(true)} />
                             </Pane>
                         </Pane>
 
@@ -141,7 +141,7 @@ const PageCreate = ({ location }) => {
                                             />
                                         </Pane>
                                     </Pane>
-                                    <IconButton height={40} marginLeft={5} icon="help" title="Click to see more details" appearance="minimal" onClick={() => setIsStep3HelpShown(true)} />
+                                    <Icon size={24} style={{cursor: "hand"}} marginLeft={5} icon="help" title="Click to see more details" color="muted" onClick={() => setIsStep3HelpShown(true)} />
                                 </Pane>
                             </Pane>
 
@@ -183,11 +183,10 @@ const PageCreate = ({ location }) => {
                     </div>
                 </div>
             </div>
-            <CornerDialog
+            <Dialog
                 isShown={isStep1HelpShown}
                 title="Step.1 - Help"
                 confirmLabel="Ok"
-                width="50%"
                 onCloseComplete={() => setIsStep1HelpShown(false)}
             >
                 <Pane display="flex" flexDirection='column' margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
@@ -199,12 +198,11 @@ const PageCreate = ({ location }) => {
                 <Pane display="flex" flexDirection='column' margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
                     <img src="/images/copy-base-example.png" width="100%" />
                 </Pane>
-            </CornerDialog>
-            <CornerDialog
+            </Dialog>
+            <Dialog
                 isShown={isStep3HelpShown}
                 title="Step.3 - Help"
                 confirmLabel="Ok"
-                width="40%"
                 onCloseComplete={() => setIsStep3HelpShown(false)}
             >
                 <Pane display="flex" flexDirection='column' margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
@@ -215,7 +213,7 @@ const PageCreate = ({ location }) => {
                 <Pane display="flex" flexDirection='column' margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
                     <img src="/images/get-baseid-example.png" width="100%" />
                 </Pane>
-            </CornerDialog>
+            </Dialog>
         </>
     )
 }
