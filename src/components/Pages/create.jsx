@@ -87,26 +87,27 @@ const PageCreate = ({ location }) => {
                             <Heading size={600} marginBottom={5}>Selected Template : {selectedTemplate && selectedTemplate.name}</Heading>
                         </Pane>
 
-                        <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                            <Pane display="flex" margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
-                                <Pane display="flex">
-                                    <Pane display="flex" float="left" flexDirection="column">
-                                        <Heading size={500}>Step.1</Heading>
-                                        <Text>
-                                            Copy our airtable template base by clicking "Copy Template Base" button.
-                                            It will open a new browser tab. Switch to the newly opend tab and
-                                            click on "Copy base" (in the upper right corner) to copy it to your Airtable account.
-                                    </Text>
-                                        <Pane display="flex">
-                                            <Button appearance="primary" iconAfter="share" marginTop={10} onClick={() => { window.open(selectedTemplate.airtableBaseCopy, '_blank') }}>
-                                                Copy Template Base
-                                            </Button>
-                                        </Pane>
-                                    </Pane>
-                                    <IconButton height={40} marginLeft={5} icon="help" title="Click to see more details" appearance="minimal" onClick={() => setIsStep1HelpShown(true)} />
-                                </Pane>
-                            </Pane>
 
+                        <Pane display="flex" margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
+                            <Pane display="flex">
+                                <Pane display="flex" float="left" flexDirection="column">
+                                    <Heading size={500}>Step.1</Heading>
+                                    <Text>
+                                        Copy our airtable template base by clicking "Copy Template Base" button.
+                                        It will open a new browser tab. Switch to the newly opend tab and
+                                        click on "Copy base" (in the upper right corner) to copy it to your Airtable account.
+                                    </Text>
+                                    <Pane display="flex">
+                                        <Button appearance="primary" iconAfter="share" marginTop={10} onClick={() => { window.open(selectedTemplate.airtableBaseCopy, '_blank') }}>
+                                            Copy Template Base
+                                            </Button>
+                                    </Pane>
+                                </Pane>
+                                <IconButton height={40} marginLeft={5} icon="help" title="Click to see more details" appearance="minimal" onClick={() => setIsStep1HelpShown(true)} />
+                            </Pane>
+                        </Pane>
+
+                        <Form noValidate validated={validated} onSubmit={handleSubmit}>
                             <Pane display="flex" margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
                                 <Pane display="flex" float="left" flexDirection="column">
                                     <Heading size={500}>Step.2</Heading>
