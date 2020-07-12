@@ -35,7 +35,6 @@ const TemplateSelect = ({ location }) => {
                         <div className="col-lg-4 mb-3">
                             <Card>
                                 <Card.Img variant="top" height="280px" style={{ objectFit: 'cover' }} src={`/images/${item.id}.png`} />
-                                <Pane marginLeft={5}><Pill color={item.type && item.type.toLowerCase()=="paid"?"purple":"yellow"}>{item.type||"Free"}</Pill></Pane>
                                 <Card.Body>
                                     <Card.Title>{item.name}</Card.Title>
                                     <Button height={32} marginRight={16} iconBefore="applications" appearance="primary" intent="success" onClick={() => navigate("/dashboard/page/create", { state: { template: item } })}>

@@ -20,7 +20,9 @@ const PageCreate = ({ location }) => {
     const [processing, setProcessing] = React.useState(false);
 
     const [isStep1HelpShown, setIsStep1HelpShown] = React.useState(false);
+    const [isStep2HelpShown, setIsStep2HelpShown] = React.useState(false);
     const [isStep3HelpShown, setIsStep3HelpShown] = React.useState(false);
+    const [isStep4HelpShown, setIsStep4HelpShown] = React.useState(false);
     const [selectedTemplate, setSelectedTemplate] = React.useState(template);
     const [title, setTitle] = React.useState();
     const [slug, setSlug] = React.useState("");
@@ -103,7 +105,7 @@ const PageCreate = ({ location }) => {
                                         </Button>
                                     </Pane>
                                 </Pane>
-                                <Icon size={32} style={{cursor: "hand"}} marginLeft={5} icon="help" title="Click to see more details" color="muted" onClick={() => setIsStep1HelpShown(true)} />
+                                <Icon size={32} style={{ cursor: "hand" }} marginLeft={5} icon="help" title="Click to see more details" color="muted" onClick={() => setIsStep1HelpShown(true)} />
                             </Pane>
                         </Pane>
 
@@ -122,6 +124,7 @@ const PageCreate = ({ location }) => {
                                         }}
                                     />
                                 </Pane>
+                                <Icon size={24} style={{ cursor: "hand" }} marginLeft={5} icon="help" title="Click to see more details" color="muted" onClick={() => setIsStep2HelpShown(true)} />
                             </Pane>
 
                             <Pane display="flex" margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
@@ -141,7 +144,7 @@ const PageCreate = ({ location }) => {
                                             />
                                         </Pane>
                                     </Pane>
-                                    <Icon size={24} style={{cursor: "hand"}} marginLeft={5} icon="help" title="Click to see more details" color="muted" onClick={() => setIsStep3HelpShown(true)} />
+                                    <Icon size={24} style={{ cursor: "hand" }} marginLeft={5} icon="help" title="Click to see more details" color="muted" onClick={() => setIsStep3HelpShown(true)} />
                                 </Pane>
                             </Pane>
 
@@ -171,6 +174,7 @@ const PageCreate = ({ location }) => {
                                         />
                                     </Pane>
                                 </Pane>
+                                <Icon size={24} style={{ cursor: "hand" }} marginLeft={5} icon="help" title="Click to see more details" color="muted" onClick={() => setIsStep4HelpShown(true)} />
                             </Pane>
 
                             <Pane marginLeft={10}>
@@ -200,6 +204,21 @@ const PageCreate = ({ location }) => {
                 </Pane>
             </Dialog>
             <Dialog
+                isShown={isStep2HelpShown}
+                title="Step.2 - Help"
+                confirmLabel="Ok"
+                onCloseComplete={() => setIsStep2HelpShown(false)}
+            >
+                <Pane display="flex" flexDirection='column' margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
+                    <Heading>
+                        To find your API key, navigate to Airtable account page. On your account overview page, under the API heading, there's a button that says "Generate API key."
+                    </Heading>
+                </Pane>
+                <Pane display="flex" flexDirection='column' margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
+                    <img src="/images/new-api-key-generation.gif" width="100%" />
+                </Pane>
+            </Dialog>
+            <Dialog
                 isShown={isStep3HelpShown}
                 title="Step.3 - Help"
                 confirmLabel="Ok"
@@ -212,6 +231,19 @@ const PageCreate = ({ location }) => {
                 </Pane>
                 <Pane display="flex" flexDirection='column' margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
                     <img src="/images/get-baseid-example.png" width="100%" />
+                </Pane>
+            </Dialog>
+            <Dialog
+                isShown={isStep4HelpShown}
+                title="Step.4 - Help"
+                confirmLabel="Ok"
+                onCloseComplete={() => setIsStep4HelpShown(false)}
+            >
+                <Pane display="flex" flexDirection='column' margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
+                    <Heading>Page Title</Heading>
+                    <Text>This title will be diisplayed on top of your page</Text>
+                    <Heading marginTop={10}>Page Slug</Heading>
+                    <Text>Slug needs to be unique for your account. This slug would be appended the resultant URL of your page</Text>
                 </Pane>
             </Dialog>
         </>
