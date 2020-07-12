@@ -5,6 +5,7 @@ import Profile from "../components/Profile"
 import Activation from "../components/Activation"
 import CustomDomain from "../components/CustomDomain"
 import PageCreate from "../components/Pages/create"
+import PageDetails from "../components/Pages/details"
 import TemplateSelect from "../components/Pages/select"
 import PageCreateOld from "../components/Pages/create-bkup"
 import Pages from "../components/Pages"
@@ -23,7 +24,7 @@ const Dashboard = ({location}) => {
           <PrivateRoute path="/dashboard/pages" component={Pages} />          
           <PrivateRoute path="/dashboard/page/select" component={TemplateSelect} />
           <PrivateRoute path="/dashboard/page/create" component={PageCreate} />
-          <PrivateRoute path="/dashboard/page/createold" component={PageCreateOld} />
+          <PrivateRoute path="/dashboard/page/details" component={PageDetails} />
           <PrivateRoute path="/dashboard/profile" component={Profile} />
           <PrivateRoute path="/dashboard/activate" component={Activation} />
           <PrivateRoute path="/dashboard/customdomain" component={CustomDomain} />
