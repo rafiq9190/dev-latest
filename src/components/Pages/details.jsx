@@ -32,9 +32,9 @@ const PageDetails = ({ location }) => {
             if (plan == "free" && publishedCount >= MaxProjectsInFreePlan) {
                 toaster.danger(
                     "Only '" + MaxProjectsInFreePlan + "' pages are allowed to be published in FREE plan", {
-                        id: 'forbidden-action',
-                        duration: 10
-                    }
+                    id: 'forbidden-action',
+                    duration: 10
+                }
                 )
                 return;
             }
@@ -70,6 +70,9 @@ const PageDetails = ({ location }) => {
             <div className="container m-2">
                 <div className="row">
                     <div className="col">
+                        <Button height={20} marginBottom={10} iconBefore="arrow-left" appearance="minimal" onClick={() => navigate("/dashboard/")}>
+                            Back to Dashboard
+                        </Button>
                         <Pane display="flex" margin={10} flexDirection="column">
                             <Heading size={600} marginBottom={5}>{pageDetails && pageDetails.title}</Heading>
                             <Pane>
