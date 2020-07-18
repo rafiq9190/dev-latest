@@ -18,8 +18,7 @@ const Layout = ({ location, title, children }) => {
                         <main>{children}</main>
                     </div>
                 </div>
-            </div>
-            <ScrollupButton />
+            </div>            
         </div>
     )
 }

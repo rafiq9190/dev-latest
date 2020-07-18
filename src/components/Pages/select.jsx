@@ -4,6 +4,7 @@ import firebase from "gatsby-plugin-firebase"
 import Loader from 'react-loader-spinner'
 import { Card } from 'react-bootstrap'
 import { IconButton, toaster, Pane, Heading, Text, Button, Pill } from "evergreen-ui"
+import _ from 'lodash'
 
 const TemplateSelect = ({ location }) => {
 
@@ -17,7 +18,8 @@ const TemplateSelect = ({ location }) => {
                 .ref(`templates`)
                 .once("value")
                 .then(snapshot => {
-                    setTemplates(snapshot.val());
+                    const publishedTemplates = _.filter(snapshot.val(), ( item ) => item.published == "true")
+                    setTemplates(publishedTemplates);                    
                     setLoading(false);
                     console.log(templates);
                 }); //end of loading of all templates            
@@ -31,13 +33,14 @@ const TemplateSelect = ({ location }) => {
             }
             <div className="container m-2">
                 <div className="row">
-                    {templates && Object.values(templates).map((item) => (
-                        <div className="col-lg-4 mb-3">
+                    {templates && Object.values(templates).map((item,index) => (
+                        <div className="col-lg-4 mb-3" key={index}>
                             <Card>
                                 <Card.Img variant="top" height="280px" style={{ objectFit: 'cover' }} src={`/images/${item.id}.png`} />
                                 <Card.Body>
                                     <Card.Title>{item.name}</Card.Title>
-                                    <Button height={32} marginRight={16} iconBefore="applications" appearance="primary" intent="success" onClick={() => navigate("/dashboard/page/create", { state: { template: item } })}>
+                                    <Card.Subtitle>{item.description}</Card.Subtitle>
+                                    <Button height={32} marginTop={10} marginRight={16} iconBefore="applications" appearance="primary" intent="success" onClick={() => navigate("/dashboard/page/create", { state: { template: item } })}>
                                         Select
                                     </Button>
                                     <Button height={32} iconAfter="share" onClick={() => { window.open(item.demoURL, '_blank') }}>
