@@ -21,6 +21,7 @@ const PageDetails = ({ location }) => {
 
     const [isDetailsShown, setIsDetailsShown] = React.useState(false);
     const [publishProcessing, setPublishProcessing] = React.useState(false);
+    const [usermgmtProcessing, setUsermgmtProcessing] = React.useState(false);
 
     const changePagePublishState = (slug, newstate) => {
         console.log("********** " + slug)
@@ -48,6 +49,32 @@ const PageDetails = ({ location }) => {
             .then(() => { refreshUserExtras(user); })
             .then(() => { setPublishProcessing(false) })
             .then(() => { toaster.success('Page ' + (newstate ? '' : 'un') + 'published successfully. You will be redirected to Dashboard in 5 seconds') })
+            .then(() => { setTimeout(function () { navigate(`/dashboard/`, { replace: true }) }, 5000); })
+    };
+
+    const activateUserManagement = (slug) => {
+        console.log("********** " + slug)
+        toaster.closeAll()
+        setUsermgmtProcessing(true)
+        //Free plan restriction
+        if (plan == "free") {
+            toaster.danger(
+                "User Management is NOT available on FREE plan. Please upgrade to use this feature", {
+                id: 'forbidden-action'
+            }
+            )
+            setUsermgmtProcessing(false);
+            return;
+        }
+
+        firebase
+            .database()
+            .ref()
+            .child(`users/${user.uid}/projects/${slug}/usermanagement`)
+            .set("true")
+            .then(() => { refreshUserExtras(user); })
+            .then(() => { setUsermgmtProcessing(false) })
+            .then(() => { toaster.success('User Management feature activated successfully. You will be redirected to Dashboard in 5 seconds') })
             .then(() => { setTimeout(function () { navigate(`/dashboard/`, { replace: true }) }, 5000); })
     };
 
@@ -84,7 +111,7 @@ const PageDetails = ({ location }) => {
                                         />
                                         <Button height={24} iconBefore="cloud-download" appearance="primary" intent="warning" onClick={() => { changePagePublishState(pageDetails.slug, false) }}>
                                             UnPublish Now
-                                    {publishProcessing && <Loader type="Bars" color="#FFF" height={16} width={24} />}
+                                            {publishProcessing && <Loader type="Bars" color="#FFF" height={16} width={24} />}
                                         </Button>
                                     </>
                                 }
@@ -120,6 +147,15 @@ const PageDetails = ({ location }) => {
                                 <Text size={300}>{pageDetails && pageDetails.viewName}</Text>
                             </Pane>
                         </Pane>
+
+                        {plan && plan != "free" &&
+                            <Pane display="flex" margin={10}>
+                                <Button height={24} iconBefore="user" appearance="primary" intent="info" onClick={() => { activateUserManagement(pageDetails.slug) }}>
+                                    Activate User Management
+                                {usermgmtProcessing && <Loader type="Bars" color="#FFF" height={16} width={24} />}
+                                </Button>
+                            </Pane>
+                        }
 
                         <Pane display="flex" margin={10}>
                             <IconButton icon="trash" appearance="primary" intent="danger" onClick={() => { if (window.confirm('Are you sure you wish to delete this item?')) deleteProject(pageDetails.slug) }}></IconButton>
