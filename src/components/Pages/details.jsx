@@ -10,7 +10,6 @@ import Loader from 'react-loader-spinner'
 const PageDetails = ({ location }) => {
     const { state = {} } = location
     const { pageDetails } = state
-
     const user = getUser();
     let userExtras = getUserExtras();
     const plan = getUserType();
@@ -52,8 +51,8 @@ const PageDetails = ({ location }) => {
             .then(() => { setTimeout(function () { navigate(`/dashboard/`, { replace: true }) }, 5000); })
     };
 
-    const activateUserManagement = (slug) => {
-        console.log("********** " + slug)
+    const changeUserManagement = (slug,newstate) => {
+        console.log("********** " + slug+", "+newstate)
         toaster.closeAll()
         setUsermgmtProcessing(true)
         //Free plan restriction
@@ -71,10 +70,10 @@ const PageDetails = ({ location }) => {
             .database()
             .ref()
             .child(`users/${user.uid}/projects/${slug}/usermanagement`)
-            .set("true")
+            .set(newstate)
             .then(() => { refreshUserExtras(user); })
             .then(() => { setUsermgmtProcessing(false) })
-            .then(() => { toaster.success('User Management feature activated successfully. You will be redirected to Dashboard in 5 seconds') })
+            .then(() => { toaster.success('User Management feature '+(newstate?'activated':'deactivated')+' successfully. You will be redirected to Dashboard in 5 seconds') })
             .then(() => { setTimeout(function () { navigate(`/dashboard/`, { replace: true }) }, 5000); })
     };
 
@@ -149,11 +148,17 @@ const PageDetails = ({ location }) => {
                         </Pane>
 
                         {plan && plan != "free" &&
-                            <Pane display="flex" margin={10}>
-                                <Button height={24} iconBefore="user" appearance="primary" intent="info" onClick={() => { activateUserManagement(pageDetails.slug) }}>
-                                    Activate User Management
-                                {usermgmtProcessing && <Loader type="Bars" color="#FFF" height={16} width={24} />}
-                                </Button>
+                            <Pane display="flex" margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
+                                <Pane display="flex" float="left" flexDirection="column">
+                                    <Heading size={500}>User Management is : </Heading>
+                                    <Text size={300}>{pageDetails && pageDetails.usermanagement ? 'Active' : "Inactive"}</Text>
+                                    {pageDetails &&
+                                        <Button height={24} iconBefore="user" appearance="primary" intent={pageDetails.usermanagement?'warning':'info'} onClick={() => { changeUserManagement(pageDetails.slug, !pageDetails.usermanagement) }}>
+                                            {pageDetails.usermanagement?'Deactivate':'Activate'} User Management
+                                            {usermgmtProcessing && <Loader type="Bars" color="#FFF" height={16} width={24} />}
+                                        </Button>
+                                    }
+                                </Pane>
                             </Pane>
                         }
 

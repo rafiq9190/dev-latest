@@ -40,6 +40,7 @@ export const getUserType = () => {
       //console.log("*** "+checkPassed)
     }
     //checking if the monthly cycle has ended
+    /*
     if(userExtras.subscription.license.purchase.sale_timestamp) {      
       let saleDate = new Date(userExtras.subscription.license.purchase.sale_timestamp);
       let oneMonth = new Date(saleDate.setMonth(saleDate.getMonth()+1));
@@ -47,6 +48,7 @@ export const getUserType = () => {
       checkPassed = checkPassed && (oneMonth >= new Date());
       //console.log("*** "+checkPassed)
     }
+    */
     if(checkPassed) {
       userType = "paid";
     }
