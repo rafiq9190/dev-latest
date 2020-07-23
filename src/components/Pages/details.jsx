@@ -4,7 +4,7 @@ import { navigate } from "gatsby"
 import { getUser, getUserExtras, getUserType } from "../../utils/auth"
 import { refreshUserExtras } from "../../utils/firebaseHelpers"
 import firebase from "gatsby-plugin-firebase"
-import { Alert, IconButton, toaster, Pane, Heading, Text, Button, Pill } from "evergreen-ui"
+import { Alert, IconButton, toaster, Pane, Heading, Text, Button, Switch } from "evergreen-ui"
 import Loader from 'react-loader-spinner'
 
 const PageDetails = ({ location }) => {
@@ -21,6 +21,9 @@ const PageDetails = ({ location }) => {
     const [isDetailsShown, setIsDetailsShown] = React.useState(false);
     const [publishProcessing, setPublishProcessing] = React.useState(false);
     const [usermgmtProcessing, setUsermgmtProcessing] = React.useState(false);
+    const [usermgmtState, setUsermgmtState] = React.useState(pageDetails && pageDetails.usermanagement);
+    const [accessmgmtProcessing, setAccessmgmtProcessing] = React.useState(false);
+    const [accessmgmtState, setAccessmgmtState] = React.useState(pageDetails && pageDetails.accessmanagement);
 
     const changePagePublishState = (slug, newstate) => {
         console.log("********** " + slug)
@@ -51,14 +54,14 @@ const PageDetails = ({ location }) => {
             .then(() => { setTimeout(function () { navigate(`/dashboard/`, { replace: true }) }, 5000); })
     };
 
-    const changeUserManagement = (slug,newstate) => {
-        console.log("********** " + slug+", "+newstate)
+    const changeUserManagement = (slug, newstate) => {
+        console.log("********** " + slug + ", " + newstate)
         toaster.closeAll()
         setUsermgmtProcessing(true)
         //Free plan restriction
         if (plan == "free") {
             toaster.danger(
-                "User Management is NOT available on FREE plan. Please upgrade to use this feature", {
+                "User Management feature is NOT available on FREE plan. Please upgrade to use this feature", {
                 id: 'forbidden-action'
             }
             )
@@ -73,7 +76,33 @@ const PageDetails = ({ location }) => {
             .set(newstate)
             .then(() => { refreshUserExtras(user); })
             .then(() => { setUsermgmtProcessing(false) })
-            .then(() => { toaster.success('User Management feature '+(newstate?'activated':'deactivated')+' successfully. You will be redirected to Dashboard in 5 seconds') })
+            .then(() => { toaster.success('User Management feature ' + (newstate ? 'activated' : 'deactivated') + ' successfully. You will be redirected to Dashboard in 5 seconds') })
+            .then(() => { setTimeout(function () { navigate(`/dashboard/`, { replace: true }) }, 5000); })
+    };
+
+    const changeAccessManagement = (slug, newstate) => {
+        console.log("********** " + slug + ", " + newstate)
+        toaster.closeAll()
+        setAccessmgmtProcessing(true)
+        //Free plan restriction
+        if (plan == "free") {
+            toaster.danger(
+                "Access Management feature is NOT available on FREE plan. Please upgrade to use this feature", {
+                id: 'forbidden-action'
+            }
+            )
+            setAccessmgmtProcessing(false);
+            return;
+        }
+
+        firebase
+            .database()
+            .ref()
+            .child(`users/${user.uid}/projects/${slug}/accessmanagement`)
+            .set(newstate)
+            .then(() => { refreshUserExtras(user); })
+            .then(() => { setUsermgmtProcessing(false) })
+            .then(() => { toaster.success('Access Management feature ' + (newstate ? 'activated' : 'deactivated') + ' successfully. You will be redirected to Dashboard in 5 seconds') })
             .then(() => { setTimeout(function () { navigate(`/dashboard/`, { replace: true }) }, 5000); })
     };
 
@@ -143,21 +172,32 @@ const PageDetails = ({ location }) => {
                                 <Heading size={500}>Airtable Table Name</Heading>
                                 <Text size={400} marginBottom={10}>{pageDetails && pageDetails.tableName}</Text>
                                 <Heading size={500}>Airtable View Name</Heading>
-                                <Text size={300}>{pageDetails && pageDetails.viewName}</Text>
+                                <Text size={400}>{pageDetails && pageDetails.viewName}</Text>
                             </Pane>
                         </Pane>
 
                         {plan && plan != "free" &&
-                            <Pane display="flex" margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
-                                <Pane display="flex" float="left" flexDirection="column">
-                                    <Heading size={500}>User Management is : </Heading>
-                                    <Text size={300}>{pageDetails && pageDetails.usermanagement ? 'Active' : "Inactive"}</Text>
-                                    {pageDetails &&
-                                        <Button height={24} iconBefore="user" appearance="primary" intent={pageDetails.usermanagement?'warning':'info'} onClick={() => { changeUserManagement(pageDetails.slug, !pageDetails.usermanagement) }}>
-                                            {pageDetails.usermanagement?'Deactivate':'Activate'} User Management
-                                            {usermgmtProcessing && <Loader type="Bars" color="#FFF" height={16} width={24} />}
-                                        </Button>
-                                    }
+                            <Pane marginTop={20} marginLeft={10}>
+                                <Text size={400}>Paid Features</Text>
+                                <Pane display="flex" padding={10} background="tealTint" borderRadius={3} elevation={4}>
+                                    <Pane display="flex" float="left" flexDirection="column">
+                                        <Pane display="flex">
+                                            <Switch margin={10} 
+                                                checked={usermgmtState}
+                                                onChange={e => { setUsermgmtState(e.target.checked); changeUserManagement(pageDetails.slug, !pageDetails.usermanagement) }}
+                                            />
+                                            <Heading margin={8} size={500}>{`  `}Users</Heading>
+                                            {usermgmtProcessing && <Pane marginTop={5}><Loader type="Bars" color="#3d8bd4" height={16} width={24} /></Pane>}
+                                        </Pane>
+                                        <Pane display="flex">
+                                            <Switch margin={10}
+                                                checked={accessmgmtState}
+                                                onChange={e => { setAccessmgmtState(e.target.checked); changeAccessManagement(pageDetails.slug, !pageDetails.accessmanagement) }}
+                                            />
+                                            <Heading margin={8} size={500}>{`  `}Access</Heading>
+                                            {accessmgmtProcessing && <Pane marginTop={5}><Loader type="Bars" color="#3d8bd4" height={16} width={24} /></Pane>}
+                                        </Pane>
+                                    </Pane>
                                 </Pane>
                             </Pane>
                         }

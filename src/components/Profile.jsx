@@ -52,7 +52,17 @@ const Profile = () => {
         .child(`users/${user.uid}/projects/${project.slug}/usermanagement`)
         .set(false)
         .then(() => { refreshUserExtras(user); console.log('User Management Removed for = ' + project.slug); })
-        .then(() => { toaster.warning("User Management Removed successfully.", { id: "page-unpublish" }) })
+    })
+  };
+
+  const removeAccessManagement = () => {
+    Object.values(userExtras.projects).map((project) => {
+      firebase
+        .database()
+        .ref()
+        .child(`users/${user.uid}/projects/${project.slug}/accessmanagement`)
+        .set(false)
+        .then(() => { refreshUserExtras(user); console.log('Access Management Removed for = ' + project.slug); })
     })
   };
 
@@ -60,6 +70,7 @@ const Profile = () => {
     setProcessing(true);
     removeCustomDomain();
     removeUserManagement();
+    removeAccessManagement();
     unpublishAllPages();
     firebase
       .database()
