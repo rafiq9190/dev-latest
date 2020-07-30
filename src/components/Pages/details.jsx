@@ -24,6 +24,8 @@ const PageDetails = ({ location }) => {
     const [usermgmtState, setUsermgmtState] = React.useState(pageDetails && pageDetails.usermanagement);
     const [accessmgmtProcessing, setAccessmgmtProcessing] = React.useState(false);
     const [accessmgmtState, setAccessmgmtState] = React.useState(pageDetails && pageDetails.accessmanagement);
+    const [commentsmgmtProcessing, setCommentsmgmtProcessing] = React.useState(false);
+    const [commentsmgmtState, setCommentsmgmtState] = React.useState(pageDetails && pageDetails.commentsmanagement);
 
     const changePagePublishState = (slug, newstate) => {
         console.log("********** " + slug)
@@ -103,6 +105,32 @@ const PageDetails = ({ location }) => {
             .then(() => { refreshUserExtras(user); })
             .then(() => { setUsermgmtProcessing(false) })
             .then(() => { toaster.success('Access Management feature ' + (newstate ? 'activated' : 'deactivated') + ' successfully. You will be redirected to Dashboard in 5 seconds') })
+            .then(() => { setTimeout(function () { navigate(`/dashboard/`, { replace: true }) }, 5000); })
+    };
+
+    const changeCommentsManagement = (slug, newstate) => {
+        console.log("********** " + slug + ", " + newstate)
+        toaster.closeAll()
+        setCommentsmgmtProcessing(true)
+        //Free plan restriction
+        if (plan == "free") {
+            toaster.danger(
+                "Comments Management feature is NOT available on FREE plan. Please upgrade to use this feature", {
+                id: 'forbidden-action'
+            }
+            )
+            setCommentsmgmtProcessing(false);
+            return;
+        }
+
+        firebase
+            .database()
+            .ref()
+            .child(`users/${user.uid}/projects/${slug}/commentsmanagement`)
+            .set(newstate)
+            .then(() => { refreshUserExtras(user); })
+            .then(() => { setUsermgmtProcessing(false) })
+            .then(() => { toaster.success('Comments Management feature ' + (newstate ? 'activated' : 'deactivated') + ' successfully. You will be redirected to Dashboard in 5 seconds') })
             .then(() => { setTimeout(function () { navigate(`/dashboard/`, { replace: true }) }, 5000); })
     };
 
@@ -196,6 +224,14 @@ const PageDetails = ({ location }) => {
                                             />
                                             <Heading margin={8} size={500}>{`  `}Access</Heading>
                                             {accessmgmtProcessing && <Pane marginTop={5}><Loader type="Bars" color="#3d8bd4" height={16} width={24} /></Pane>}
+                                        </Pane>
+                                        <Pane display="flex">
+                                            <Switch margin={10}
+                                                checked={commentsmgmtState}
+                                                onChange={e => { setCommentsmgmtState(e.target.checked); changeCommentsManagement(pageDetails.slug, !pageDetails.commentsmanagement) }}
+                                            />
+                                            <Heading margin={8} size={500}>{`  `}Comments</Heading>
+                                            {commentsmgmtProcessing && <Pane marginTop={5}><Loader type="Bars" color="#3d8bd4" height={16} width={24} /></Pane>}
                                         </Pane>
                                     </Pane>
                                 </Pane>

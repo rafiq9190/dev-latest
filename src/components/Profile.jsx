@@ -66,11 +66,23 @@ const Profile = () => {
     })
   };
 
+  const removeCommentsManagement = () => {
+    Object.values(userExtras.projects).map((project) => {
+      firebase
+        .database()
+        .ref()
+        .child(`users/${user.uid}/projects/${project.slug}/commentsmanagement`)
+        .set(false)
+        .then(() => { refreshUserExtras(user); console.log('Comments Management Removed for = ' + project.slug); })
+    })
+  };
+
   const cancelSubscription = () => {
     setProcessing(true);
     removeCustomDomain();
     removeUserManagement();
     removeAccessManagement();
+    removeCommentsManagement();
     unpublishAllPages();
     firebase
       .database()
