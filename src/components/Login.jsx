@@ -33,13 +33,11 @@ const Login = () => {
   return (
     <div className="container w-100 mx-auto">
       <div className="row">
-        <div className="col-lg-2">&nbsp;</div>
-        <div className="col-lg-8 bg-light p-4">
-          <h1>Dashboard Login</h1>
-          <p>Please sign-in to access your pages:</p>
+        <div className="col bg-white p-4 text-center">
+          <h1>Login</h1>
+          <p>Please sign-in for the access</p>
           {firebase && <StyledFirebaseAuth uiConfig={getUiConfig(firebase.auth)} firebaseAuth={firebase.auth()} />}
         </div>
-        <div className="col-lg-2">&nbsp;</div>
       </div>
     </div>
   );
