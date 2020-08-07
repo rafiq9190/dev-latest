@@ -4,7 +4,7 @@ import { navigate } from "gatsby"
 import { getUser, getUserExtras, getUserType } from "../../utils/auth"
 import { refreshUserExtras } from "../../utils/firebaseHelpers"
 import firebase from "gatsby-plugin-firebase"
-import { Alert, IconButton, toaster, Pane, Heading, Text, Button, Switch } from "evergreen-ui"
+import { Alert, IconButton, toaster, Pane, Heading, Text, TextInput, Button, Switch } from "evergreen-ui"
 import Loader from 'react-loader-spinner'
 
 const PageDetails = ({ location }) => {
@@ -26,6 +26,8 @@ const PageDetails = ({ location }) => {
     const [accessmgmtState, setAccessmgmtState] = React.useState(pageDetails && pageDetails.accessmanagement);
     const [commentsmgmtProcessing, setCommentsmgmtProcessing] = React.useState(false);
     const [commentsmgmtState, setCommentsmgmtState] = React.useState(pageDetails && pageDetails.commentsmanagement);
+    const [gaID, setGaID] = React.useState("");
+    const [gaProcessing, setGaProcessing] = React.useState(false);
 
     const changePagePublishState = (slug, newstate) => {
         console.log("********** " + slug)
@@ -103,7 +105,7 @@ const PageDetails = ({ location }) => {
             .child(`users/${user.uid}/projects/${slug}/accessmanagement`)
             .set(newstate)
             .then(() => { refreshUserExtras(user); })
-            .then(() => { setUsermgmtProcessing(false) })
+            .then(() => { setAccessmgmtProcessing(false) })
             .then(() => { toaster.success('Access Management feature ' + (newstate ? 'activated' : 'deactivated') + ' successfully. You will be redirected to Dashboard in 5 seconds') })
             .then(() => { setTimeout(function () { navigate(`/dashboard/`, { replace: true }) }, 5000); })
     };
@@ -129,8 +131,39 @@ const PageDetails = ({ location }) => {
             .child(`users/${user.uid}/projects/${slug}/commentsmanagement`)
             .set(newstate)
             .then(() => { refreshUserExtras(user); })
-            .then(() => { setUsermgmtProcessing(false) })
+            .then(() => { setCommentsmgmtProcessing(false) })
             .then(() => { toaster.success('Comments Management feature ' + (newstate ? 'activated' : 'deactivated') + ' successfully. You will be redirected to Dashboard in 5 seconds') })
+            .then(() => { setTimeout(function () { navigate(`/dashboard/`, { replace: true }) }, 5000); })
+    };
+    
+    const updateTrackingInfo = (slug) => {
+        console.log("********** " + slug)
+        toaster.closeAll()
+        setGaProcessing(true)
+        //Free plan restriction
+        if (plan == "free") {
+            toaster.danger(
+                "Google Analytics feature is NOT available on FREE plan. Please upgrade to use this feature", {
+                id: 'forbidden-action'
+            }
+            )
+            setGaProcessing(false);
+            return;
+        }
+        if (gaID.length<=0) {
+            toaster.danger("Please provide Google Analytics ID")
+            setGaProcessing(false);
+            return;
+        }
+
+        firebase
+            .database()
+            .ref()
+            .child(`users/${user.uid}/projects/${slug}/googleAnalyticsId`)
+            .set(gaID)
+            .then(() => { refreshUserExtras(user); })
+            .then(() => { setGaProcessing(false) })
+            .then(() => { toaster.success('Google Analytics Information updated successfully. You will be redirected to Dashboard in 5 seconds') })
             .then(() => { setTimeout(function () { navigate(`/dashboard/`, { replace: true }) }, 5000); })
     };
 
@@ -210,7 +243,7 @@ const PageDetails = ({ location }) => {
                                 <Pane display="flex" padding={10} background="tealTint" borderRadius={3} elevation={4}>
                                     <Pane display="flex" float="left" flexDirection="column">
                                         <Pane display="flex">
-                                            <Switch margin={10} 
+                                            <Switch margin={10}
                                                 checked={usermgmtState}
                                                 onChange={e => { setUsermgmtState(e.target.checked); changeUserManagement(pageDetails.slug, !pageDetails.usermanagement) }}
                                             />
@@ -233,6 +266,27 @@ const PageDetails = ({ location }) => {
                                             <Heading margin={8} size={500}>{`  `}Comments</Heading>
                                             {commentsmgmtProcessing && <Pane marginTop={5}><Loader type="Bars" color="#3d8bd4" height={16} width={24} /></Pane>}
                                         </Pane>
+                                    </Pane>
+                                </Pane>
+                            </Pane>
+                        }
+
+                        {plan && plan != "free" &&
+                            <Pane marginTop={20} marginLeft={10}>
+                                <Text size={400}>Google Analytics</Text>
+                                <Pane display="flex" padding={20} background="tealTint" borderRadius={3} elevation={4}>
+                                    <Pane display="flex" float="left" flexDirection="column">
+                                        <Heading marginBottom={8} size={500}>Enter Google Universal Analytics Tracking ID</Heading>
+                                        <TextInput
+                                            name="gaid"
+                                            placeholder="UA-XXXXXXX-XX"
+                                            width="100%"
+                                            onChange={e => { setGaID(e.target.value) }}
+                                        />
+                                        <Button marginTop={8} height={24} iconBefore="updated" appearance="primary" intent="primary" onClick={() => { updateTrackingInfo(pageDetails.slug) }}>
+                                            Update Tracking Info
+                                            {gaProcessing && <Loader type="Bars" color="#FFF" height={16} width={24} />}
+                                        </Button>
                                     </Pane>
                                 </Pane>
                             </Pane>
