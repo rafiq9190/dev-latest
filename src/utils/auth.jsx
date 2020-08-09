@@ -50,7 +50,7 @@ export const getUserType = () => {
     }
     */
     if(checkPassed) {
-      userType = "paid";
+      userType = "pro";
     }
   }
   return userType;
