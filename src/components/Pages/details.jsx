@@ -327,7 +327,7 @@ const PageDetails = ({ location }) => {
                                 </Pane>
                             </Pane>
 
-                            <Pane display="flex" marginLeft={10} marginRight={10} padding={10} background="tint1" borderRadius={3} elevation={4}>
+                            <Pane display="flex" marginLeft={10} marginRight={10} padding={10} background="tint2" borderRadius={3} elevation={4}>
                                 <Pane display="flex" float="left" flexDirection="column">
                                     <Heading size={500}>Project Template Code</Heading>
                                     <Text size={400} marginBottom={10}>{pageDetails && pageDetails.selectedTemplate}</Text>
@@ -347,7 +347,7 @@ const PageDetails = ({ location }) => {
                             <button type="button" className="btn btn-info btn-sm mt-2">
                                 Save Changes
                             </button>
-                            <Pane padding={20} background="tint1" borderRadius={3} elevation={4}>
+                            <Pane padding={20} background="tint2" borderRadius={3} elevation={4}>
                                 <TextInputField
                                     label="Site Title"
                                     placeholder="Enter title for the site"
@@ -407,7 +407,7 @@ const PageDetails = ({ location }) => {
                             <button type="button" className="btn btn-info btn-sm mt-2">
                                 Save Changes
                             </button>
-                            <Pane padding={20} background="tint1" borderRadius={3} elevation={4}>
+                            <Pane padding={20} background="tint2" borderRadius={3} elevation={4}>
                                 <TextInputField
                                     label="errorMsgNoAccess"
                                     placeholder="Enter errorMsgNoAccess"
@@ -429,7 +429,7 @@ const PageDetails = ({ location }) => {
                         <Tab eventKey="paid" title="Paid Features" style={tabContent}>
                             {plan && plan != "free" &&
                                 <Pane marginTop={20} marginLeft={10}>
-                                    <Pane display="flex" padding={10} background="tint1" borderRadius={3} elevation={4}>
+                                    <Pane display="flex" padding={10} background="tint2" borderRadius={3} elevation={4}>
                                         <Pane display="flex" float="left" flexDirection="column">
                                             <Pane display="flex">
                                                 <Switch margin={10}
@@ -463,7 +463,7 @@ const PageDetails = ({ location }) => {
                             {plan && plan != "free" &&
                                 <Pane marginTop={20} marginLeft={10}>
                                     <Text size={400}>Google Analytics</Text>
-                                    <Pane display="flex" padding={20} background="tint1" borderRadius={3} elevation={4}>
+                                    <Pane display="flex" padding={20} background="tint2" borderRadius={3} elevation={4}>
                                         <Pane display="flex" float="left" flexDirection="column">
                                             <Heading marginBottom={8} size={500}>Enter Google Universal Analytics Tracking ID</Heading>
                                             <Form noValidate validated={gaValidated} onSubmit={updateTrackingInfo}>
@@ -488,7 +488,7 @@ const PageDetails = ({ location }) => {
                             {plan && plan != "free" &&
                                 <Pane marginTop={20} marginLeft={10}>
                                     <Text size={400}>Add Custom Domain</Text>
-                                    <Pane display="flex" padding={20} background="tint1" borderRadius={3} elevation={4}>
+                                    <Pane display="flex" padding={20} background="tint2" borderRadius={3} elevation={4}>
                                         <Pane display="flex" float="left" flexDirection="column">
                                             <Heading marginBottom={8} size={500}>Enter custom domain or sub-domain url here</Heading>
                                             <Form noValidate validated={customDomainValidated} onSubmit={handleNewDomainSubmit}>
@@ -531,7 +531,7 @@ const PageDetails = ({ location }) => {
                             <button type="button" className="btn btn-info btn-sm mt-2">
                                 Save Changes
                             </button>
-                            <Pane display="flex" padding={10} background="tint1" borderRadius={3} elevation={4}>
+                            <Pane display="flex" padding={10} background="tint2" borderRadius={3} elevation={4}>
                                 <Pane display="flex" float="left" flexDirection="column">
                                     <Pane display="flex">
                                         <Switch margin={10} />
