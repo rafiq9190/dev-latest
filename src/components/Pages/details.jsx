@@ -1,4 +1,5 @@
 import React from "react"
+import { Helmet } from "react-helmet"
 import _ from 'lodash'
 import { navigate } from "gatsby"
 import { Form, Tabs, Tab } from 'react-bootstrap';
@@ -9,6 +10,8 @@ import { Alert, IconButton, toaster, Pane, Heading, Text, TextInputField, FilePi
 import Loader from 'react-loader-spinner'
 import NetlifyAPI from 'netlify'
 import SiteConfig from "../../config/site"
+import { CloudinaryContext } from "cloudinary-react";
+import { openUploadWidget } from "../../utils/cloudinaryService"
 
 const tabContent = {
     borderLeft: "1px solid #ddd",
@@ -23,6 +26,11 @@ const PageDetails = ({ location }) => {
     const { pageDetails } = state
     const user = getUser();
     let userExtras = getUserExtras();
+    console.log(pageDetails)
+
+    const cloudinaryAccountName = "hyperlyst";
+    const cloudinaryUploadPreset = "user_settings_uploads";
+
     const plan = getUserType();
     const publicdomain = pageDetails.customDomain ? ("http://" + pageDetails.customDomain) : "https://sites.hyperlyst.com"
 
@@ -30,14 +38,35 @@ const PageDetails = ({ location }) => {
     const customDomainCount = (userExtras && userExtras.projects) ? _.filter(userExtras.projects, (project) => project.customDomain != null).length : 0;
     const MaxProjectsInFreePlan = 1;
 
+    //general
     const [isDetailsShown, setIsDetailsShown] = React.useState(false);
     const [publishProcessing, setPublishProcessing] = React.useState(false);
+
+    //settings
+    const settingsData = pageDetails.data && pageDetails.data.settings ? pageDetails.data.settings : [];
+    const [settingsProcessing, setSettingsProcessing] = React.useState(false);
+    const [settingsSiteTitle, setSettingsSiteTitle] = React.useState(settingsData.settingsSiteTitle || "");
+    const [settingsSiteSubTitle, setSettingsSiteSubTitle] = React.useState(settingsData.settingsSiteSubTitle || "");
+    const [settingsPrimaryColor, setSettingsPrimaryColor] = React.useState(settingsData.settingsPrimaryColor || "");
+    const [settingsFonts, setSettingsFonts] = React.useState(settingsData.settingsFonts || "");
+    const [settingsMetaDescription, setSettingsMetaDescription] = React.useState(settingsData.settingsMetaDescription || "");
+    const [settingsMetaKeywords, setSettingsMetaKeywords] = React.useState(settingsData.settingsMetaKeywords || "");
+    const [settingsLogoImage, setSettingsLogoImage] = React.useState(settingsData.settingsLogoImage || "");
+    const [settingsLogoImageThumbnail, setSettingsLogoImageThumbnail] = React.useState(settingsData.settingsLogoImageThumbnail || "");
+    const [settingsHeroTitle, setSettingsHeroTitle] = React.useState(settingsData.settingsHeroTitle || "");
+    const [settingsHeroDescription, setSettingsHeroDescription] = React.useState(settingsData.settingsHeroDescription || "");
+    const [settingsHeroImage, setSettingsHeroImage] = React.useState(settingsData.settingsHeroImage || "");
+    const [settingsHeroImageThumbnail, setSettingsHeroImageThumbnail] = React.useState(settingsData.settingsHeroImageThumbnail || "");
+
+    //access
     const [usermgmtProcessing, setUsermgmtProcessing] = React.useState(false);
     const [usermgmtState, setUsermgmtState] = React.useState(pageDetails && pageDetails.usermanagement);
     const [accessmgmtProcessing, setAccessmgmtProcessing] = React.useState(false);
     const [accessmgmtState, setAccessmgmtState] = React.useState(pageDetails && pageDetails.accessmanagement);
     const [commentsmgmtProcessing, setCommentsmgmtProcessing] = React.useState(false);
     const [commentsmgmtState, setCommentsmgmtState] = React.useState(pageDetails && pageDetails.commentsmanagement);
+
+    //paid
     const [gaID, setGaID] = React.useState(pageDetails.googleAnalyticsId);
     const [gaValidated, setGaValidated] = React.useState(false);
     const [gaProcessing, setGaProcessing] = React.useState(false);
@@ -162,6 +191,64 @@ const PageDetails = ({ location }) => {
             .then(() => { setTimeout(function () { navigate(`/dashboard/`, { replace: true }) }, 5000); })
     };
 
+    const beginImageUpload = (tag) => {
+        const uploadOptions = {
+            cloudName: cloudinaryAccountName,
+            tags: [tag],
+            uploadPreset: cloudinaryUploadPreset
+        };
+
+        openUploadWidget(uploadOptions, (error, photos) => {
+            if (!error) {
+                if (photos.event === 'success') {
+                    console.log("********************* After " + tag + " Upload")
+                    console.log(photos)
+                    if (tag == "logoImage") {
+                        setSettingsLogoImage(photos.info.url)
+                        setSettingsLogoImageThumbnail(photos.info.thumbnail_url)
+                    }
+                    else if (tag == "heroImage") {
+                        setSettingsHeroImage(photos.info.url)
+                        setSettingsHeroImageThumbnail(photos.info.thumbnail_url)
+                    }
+                }
+            } else {
+                console.log("Error while uploading - " + tag);
+                console.error(error)
+            }
+        })
+    }
+
+    const saveSettings = (slug) => {
+        toaster.closeAll()
+        setSettingsProcessing(true)
+
+        const settingsData = {
+            settingsSiteTitle,
+            settingsSiteSubTitle,
+            settingsPrimaryColor,
+            settingsFonts,
+            settingsMetaDescription,
+            settingsMetaKeywords,
+            settingsLogoImage,
+            settingsLogoImageThumbnail,
+            settingsHeroTitle,
+            settingsHeroDescription,
+            settingsHeroImage,
+            settingsHeroImageThumbnail,
+        }
+
+        firebase
+            .database()
+            .ref()
+            .child(`users/${user.uid}/projects/${slug}/data/settings`)
+            .set(settingsData)
+            .then(() => { refreshUserExtras(user); })
+            .then(() => { setSettingsProcessing(false) })
+            .then(() => { toaster.success('Settings Saved Successfully. You will be redirected to Dashboard in 5 seconds') })
+            .then(() => { setTimeout(function () { navigate(`/dashboard/`, { replace: true }) }, 5000); })
+    };
+
     const changeUserManagement = (slug, newstate) => {
         console.log("********** " + slug + ", " + newstate)
         toaster.closeAll()
@@ -282,282 +369,316 @@ const PageDetails = ({ location }) => {
     };
 
     return (
-        <div className="container m-2">
-            <div className="row">
-                <div className="col">
-                    <Button height={20} marginBottom={10} iconBefore="arrow-left" appearance="minimal" onClick={() => navigate("/dashboard/")}>
-                        Back to Dashboard
+        <CloudinaryContext cloudName={cloudinaryAccountName}>
+            <Helmet>
+                <script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript" />
+            </Helmet>
+            <div className="container m-2">
+                <div className="row">
+                    <div className="col">
+                        <Button height={20} marginBottom={10} iconBefore="arrow-left" appearance="minimal" onClick={() => navigate("/dashboard/")}>
+                            Back to Dashboard
                     </Button>
-                    <h5 className="mb-2">Manage all settings here</h5>
-                    <Tabs className="nav-fill px-2"
-                        id="page-settings"
-                        onSelect={(k) => console.log("**** Selected tab = " + k)}
-                    >
-                        <Tab eventKey="general" title="General" style={tabContent}>
-                            <Pane display="flex" margin={10} flexDirection="column">
-                                <Heading size={600} marginBottom={5}>{pageDetails && pageDetails.title}</Heading>
-                                <Pane>
-                                    {pageDetails && pageDetails.published &&
-                                        <>
-                                            <Alert
-                                                intent="success"
-                                                title="This page is Published"
-                                            />
-                                            <Button height={24} iconBefore="cloud-download" appearance="primary" intent="warning" onClick={() => { changePagePublishState(pageDetails.slug, false) }}>
-                                                UnPublish Now
+                        <h5 className="mb-2">Manage all settings here</h5>
+                        <Tabs className="nav-fill px-2"
+                            id="page-settings"
+                            onSelect={(k) => console.log("**** Selected tab = " + k)}
+                        >
+                            <Tab eventKey="general" title="General" style={tabContent}>
+                                <Pane display="flex" margin={10} flexDirection="column">
+                                    <Heading size={600} marginBottom={5}>{pageDetails && pageDetails.title}</Heading>
+                                    <Pane>
+                                        {pageDetails && pageDetails.published &&
+                                            <>
+                                                <Alert
+                                                    intent="success"
+                                                    title="This page is Published"
+                                                />
+                                                <Button height={24} iconBefore="cloud-download" appearance="primary" intent="warning" onClick={() => { changePagePublishState(pageDetails.slug, false) }}>
+                                                    UnPublish Now
                                             {publishProcessing && <Loader type="Bars" color="#FFF" height={16} width={24} />}
-                                            </Button>
-                                        </>
-                                    }
-                                    {pageDetails && !pageDetails.published &&
-                                        <>
-                                            <Alert
-                                                intent="warning"
-                                                title="This page is NOT Published"
-                                            />
-                                            <Button height={24} iconBefore="cloud-upload" appearance="primary" intent="primary" onClick={() => { changePagePublishState(pageDetails.slug, true) }}>
-                                                Publish Now
+                                                </Button>
+                                            </>
+                                        }
+                                        {pageDetails && !pageDetails.published &&
+                                            <>
+                                                <Alert
+                                                    intent="warning"
+                                                    title="This page is NOT Published"
+                                                />
+                                                <Button height={24} iconBefore="cloud-upload" appearance="primary"  onClick={() => { changePagePublishState(pageDetails.slug, true) }}>
+                                                    Publish Now
                                     {publishProcessing && <Loader type="Bars" color="#FFF" height={16} width={24} />}
-                                            </Button>
-                                        </>
-                                    }
-                                    <Button height={24} marginLeft={15} iconBefore="link" appearance="primary" intent="success" onClick={() => { window.open(`${publicdomain}/public/${user.uid}/project/${pageDetails.slug}`, '_blank') }}>
-                                        Public URL
+                                                </Button>
+                                            </>
+                                        }
+                                        <Button height={24} marginLeft={15} iconBefore="link" appearance="primary" intent="success" onClick={() => { window.open(`${publicdomain}/public/${user.uid}/project/${pageDetails.slug}`, '_blank') }}>
+                                            Public URL
                         </Button>
+                                    </Pane>
                                 </Pane>
-                            </Pane>
 
-                            <Pane display="flex" marginLeft={10} marginRight={10} padding={10} background="tint2" borderRadius={3} elevation={4}>
-                                <Pane display="flex" float="left" flexDirection="column">
-                                    <Heading size={500}>Project Template Code</Heading>
-                                    <Text size={400} marginBottom={10}>{pageDetails && pageDetails.selectedTemplate}</Text>
-                                    <Heading size={500}>Airtable API Key</Heading>
-                                    <Text size={400} marginBottom={10}>{pageDetails && pageDetails.apiKey}</Text>
-                                    <Heading size={500}>Airtable Base ID</Heading>
-                                    <Text size={400} marginBottom={10}>{pageDetails && pageDetails.baseId}</Text>
-                                    <Heading size={500}>Airtable Table Name</Heading>
-                                    <Text size={400} marginBottom={10}>{pageDetails && pageDetails.tableName}</Text>
-                                    <Heading size={500}>Airtable View Name</Heading>
-                                    <Text size={400}>{pageDetails && pageDetails.viewName}</Text>
+                                <Pane display="flex" marginLeft={10} marginRight={10} padding={10} background="tint2" borderRadius={3} elevation={4}>
+                                    <Pane display="flex" float="left" flexDirection="column">
+                                        <Heading size={500}>Project Template Code</Heading>
+                                        <Text size={400} marginBottom={10}>{pageDetails && pageDetails.selectedTemplate}</Text>
+                                        <Heading size={500}>Airtable API Key</Heading>
+                                        <Text size={400} marginBottom={10}>{pageDetails && pageDetails.apiKey}</Text>
+                                        <Heading size={500}>Airtable Base ID</Heading>
+                                        <Text size={400} marginBottom={10}>{pageDetails && pageDetails.baseId}</Text>
+                                        <Heading size={500}>Airtable Table Name</Heading>
+                                        <Text size={400} marginBottom={10}>{pageDetails && pageDetails.tableName}</Text>
+                                        <Heading size={500}>Airtable View Name</Heading>
+                                        <Text size={400}>{pageDetails && pageDetails.viewName}</Text>
+                                    </Pane>
                                 </Pane>
-                            </Pane>
-                        </Tab>
-                        <Tab eventKey="settings" title="Settings" style={tabContent}>
-                            <Heading size={400}>Manage site settings here</Heading>
-                            <button type="button" className="btn btn-info btn-sm mt-2">
-                                Save Changes
-                            </button>
-                            <Pane padding={20} background="tint2" borderRadius={3} elevation={4}>
-                                <TextInputField
-                                    label="Site Title"
-                                    placeholder="Enter title for the site"
-                                    hint=""
-                                />
-                                <TextInputField
-                                    label="Site Subtitle"
-                                    placeholder="Enter subtitle of the site"
-                                    hint=""
-                                />
-                                <TextInputField
-                                    label="Primary color"
-                                    placeholder="Enter primary color of the site"
-                                    hint="eg. #3b4e5c"
-                                />
-                                <TextInputField
-                                    label="Fonts"
-                                    placeholder="Enter font family"
-                                    hint=""
-                                />
-                                <TextInputField
-                                    label="Meta Description"
-                                    placeholder="Enter meta description of the site"
-                                    hint="For SEO"
-                                />
-                                <TextInputField
-                                    label="Meta Keywords"
-                                    placeholder="Enter meta keywords of the site"
-                                    hint="For SEO"
-                                />
-                                <Pane marginBottom={20}>
-                                    <Heading size={400} marginBottom={5}>Logo Image</Heading>
-                                    <FilePicker
-                                        placeholder="Select logo of the site"
-                                    />
+                            </Tab>
+                            <Tab eventKey="settings" title="Settings" style={tabContent}>
+                                <Pane margin={10}>
+                                    <Heading size={600} marginBottom={10}>Manage site settings here</Heading>
+                                    <Button height={24} iconBefore="floppy-disk" appearance="primary"  onClick={() => { saveSettings(pageDetails.slug) }}>
+                                        Save Changes
+                                        {settingsProcessing && <Loader type="Bars" color="#FFF" height={16} width={24} />}
+                                    </Button>
+                                    <Pane padding={20} marginTop={10} background="tint2" borderRadius={3} elevation={4}>
+                                        <TextInputField
+                                            label="Site Title"
+                                            placeholder="Enter title for the site"
+                                            value={settingsSiteTitle}
+                                            onChange={e => setSettingsSiteTitle(e.target.value)}
+                                            hint=""
+                                        />
+                                        <TextInputField
+                                            label="Site Subtitle"
+                                            placeholder="Enter subtitle of the site"
+                                            value={settingsSiteSubTitle}
+                                            onChange={e => setSettingsSiteSubTitle(e.target.value)}
+                                            hint=""
+                                        />
+                                        <TextInputField
+                                            label="Primary color"
+                                            placeholder="Enter primary color of the site"
+                                            value={settingsPrimaryColor}
+                                            onChange={e => setSettingsPrimaryColor(e.target.value)}
+                                            hint="eg. #3b4e5c"
+                                        />
+                                        <TextInputField
+                                            label="Fonts"
+                                            placeholder="Enter font family"
+                                            value={settingsFonts}
+                                            onChange={e => setSettingsFonts(e.target.value)}
+                                            hint=""
+                                        />
+                                        <TextInputField
+                                            label="Meta Description"
+                                            placeholder="Enter meta description of the site"
+                                            value={settingsMetaDescription}
+                                            onChange={e => setSettingsMetaDescription(e.target.value)}
+                                            hint="For SEO"
+                                        />
+                                        <TextInputField
+                                            label="Meta Keywords"
+                                            placeholder="Enter meta keywords of the site"
+                                            value={settingsMetaKeywords}
+                                            onChange={e => setSettingsMetaKeywords(e.target.value)}
+                                            hint="For SEO"
+                                        />
+                                        <Pane marginBottom={20}>
+                                            <Heading size={400} marginBottom={5}>Logo Image</Heading>
+                                            <Button height={24} marginRight={15} iconBefore="camera" onClick={() => beginImageUpload("logoImage")}>
+                                                Select logo image
+                                            </Button>
+                                            <img src={settingsLogoImageThumbnail} />
+                                        </Pane>
+                                        <TextInputField
+                                            label="Hero Title"
+                                            placeholder="Enter title of the hero section"
+                                            value={settingsHeroTitle}
+                                            onChange={e => setSettingsHeroTitle(e.target.value)}
+                                            hint=""
+                                        />
+                                        <TextInputField
+                                            label="Hero Description"
+                                            placeholder="Enter description of the hero section"
+                                            value={settingsHeroDescription}
+                                            onChange={e => setSettingsHeroDescription(e.target.value)}
+                                            hint=""
+                                        />
+                                        <Pane marginBottom={20}>
+                                            <Heading size={400} marginBottom={5}>Hero Image</Heading>
+                                            <Button height={24} marginRight={15} iconBefore="camera" onClick={() => beginImageUpload("heroImage")}>
+                                                Select hero image
+                                            </Button>
+                                            <img src={settingsHeroImageThumbnail} />
+                                        </Pane>
+                                    </Pane>
                                 </Pane>
-                                <TextInputField
-                                    label="Hero Title"
-                                    placeholder="Enter title of the hero section"
-                                    hint=""
-                                />
-                                <TextInputField
-                                    label="Hero Description"
-                                    placeholder="Enter description of the hero section"
-                                    hint=""
-                                />
-                                <Pane marginBottom={20}>
-                                    <Heading size={400} marginBottom={5}>Hero Image</Heading>
-                                    <FilePicker
-                                        placeholder="Select image of the hero section"
-                                    />
+                            </Tab>
+                            <Tab eventKey="labels" title="Text Replacements" style={tabContent}>
+                                <Pane margin={10}>
+                                    <Heading size={600} marginBottom={10}>Manage site labels here</Heading>
+                                    <Button height={24} iconBefore="floppy-disk" appearance="primary"  onClick={() => { console.log("calling save") }}>
+                                        Save Changes
+                                    {settingsProcessing && <Loader type="Bars" color="#FFF" height={16} width={24} />}
+                                    </Button>
+                                    <Pane padding={20} background="tint2" borderRadius={3} elevation={4}>
+                                        <TextInputField
+                                            label="errorMsgNoAccess"
+                                            placeholder="Enter errorMsgNoAccess"
+                                            hint="Message will be visible when the user try to perform a task which is under access management"
+                                        />
+                                        <TextInputField
+                                            label="lblLogin"
+                                            placeholder="Enter lblLogin"
+                                            hint="Label of Login link/button"
+                                        />
+                                        <TextInputField
+                                            label="lblSignup"
+                                            placeholder="Enter lblSignup"
+                                            hint="Label of Signup link/button"
+                                        />
+                                    </Pane>
                                 </Pane>
-                            </Pane>
-                        </Tab>
-                        <Tab eventKey="labels" title="Text Replacements" style={tabContent}>
-                            <Heading size={400}>Manage site labels here</Heading>
-                            <button type="button" className="btn btn-info btn-sm mt-2">
-                                Save Changes
-                            </button>
-                            <Pane padding={20} background="tint2" borderRadius={3} elevation={4}>
-                                <TextInputField
-                                    label="errorMsgNoAccess"
-                                    placeholder="Enter errorMsgNoAccess"
-                                    hint="Message will be visible when the user try to perform a task which is under access management"
-                                />
-                                <TextInputField
-                                    label="lblLogin"
-                                    placeholder="Enter lblLogin"
-                                    hint="Label of Login link/button"
-                                />
-                                <TextInputField
-                                    label="lblSignup"
-                                    placeholder="Enter lblSignup"
-                                    hint="Label of Signup link/button"
-                                />
-                            </Pane>
-                            <Heading>All other labels will come here one after another</Heading>
-                        </Tab>
-                        <Tab eventKey="paid" title="Paid Features" style={tabContent}>
-                            {plan && plan != "free" &&
-                                <Pane marginTop={20} marginLeft={10}>
+                            </Tab>
+                            <Tab eventKey="paid" title="Paid Features" style={tabContent}>
+                                <Heading size={600} margin={10}>Manage different paid features here</Heading>
+                                {plan && plan != "free" &&
+                                    <Pane marginTop={20} marginLeft={10}>
+                                        <Pane display="flex" padding={10} background="tint2" borderRadius={3} elevation={4}>
+                                            <Pane display="flex" float="left" flexDirection="column">
+                                                <Pane display="flex">
+                                                    <Switch margin={10}
+                                                        checked={usermgmtState}
+                                                        onChange={e => { setUsermgmtState(e.target.checked); changeUserManagement(pageDetails.slug, !pageDetails.usermanagement) }}
+                                                    />
+                                                    <Heading margin={8} size={500}>{`  `}Users</Heading>
+                                                    {usermgmtProcessing && <Pane marginTop={5}><Loader type="Bars" color="#3d8bd4" height={16} width={24} /></Pane>}
+                                                </Pane>
+                                                <Pane display="flex">
+                                                    <Switch margin={10}
+                                                        checked={accessmgmtState}
+                                                        onChange={e => { setAccessmgmtState(e.target.checked); changeAccessManagement(pageDetails.slug, !pageDetails.accessmanagement) }}
+                                                    />
+                                                    <Heading margin={8} size={500}>{`  `}Access</Heading>
+                                                    {accessmgmtProcessing && <Pane marginTop={5}><Loader type="Bars" color="#3d8bd4" height={16} width={24} /></Pane>}
+                                                </Pane>
+                                                <Pane display="flex">
+                                                    <Switch margin={10}
+                                                        checked={commentsmgmtState}
+                                                        onChange={e => { setCommentsmgmtState(e.target.checked); changeCommentsManagement(pageDetails.slug, !pageDetails.commentsmanagement) }}
+                                                    />
+                                                    <Heading margin={8} size={500}>{`  `}Comments</Heading>
+                                                    {commentsmgmtProcessing && <Pane marginTop={5}><Loader type="Bars" color="#3d8bd4" height={16} width={24} /></Pane>}
+                                                </Pane>
+                                            </Pane>
+                                        </Pane>
+                                    </Pane>
+                                }
+
+                                {plan && plan != "free" &&
+                                    <Pane marginTop={20} marginLeft={10}>
+                                        <Text size={400}>Google Analytics</Text>
+                                        <Pane display="flex" padding={20} background="tint2" borderRadius={3} elevation={4}>
+                                            <Pane display="flex" float="left" flexDirection="column">
+                                                <Heading marginBottom={8} size={500}>Enter Google Universal Analytics Tracking ID</Heading>
+                                                <Form noValidate validated={gaValidated} onSubmit={updateTrackingInfo}>
+                                                    <Form.Control
+                                                        name="gaid"
+                                                        placeholder="UA-XXXXXXX-XX"
+                                                        width="100%"
+                                                        required
+                                                        value={gaID}
+                                                        onChange={e => { setGaID(e.target.value) }}
+                                                    />
+                                                    <button type="submit" className="btn btn-info btn-sm mt-2">
+                                                        Update Tracking Info
+                                                {gaProcessing && <Loader type="Bars" color="#FFF" className="d-inline" height={16} width={24} />}
+                                                    </button>
+                                                </Form>
+                                            </Pane>
+                                        </Pane>
+                                    </Pane>
+                                }
+
+                                {plan && plan != "free" &&
+                                    <Pane marginTop={20} marginLeft={10}>
+                                        <Text size={400}>Add Custom Domain</Text>
+                                        <Pane display="flex" padding={20} background="tint2" borderRadius={3} elevation={4}>
+                                            <Pane display="flex" float="left" flexDirection="column">
+                                                <Heading marginBottom={8} size={500}>Enter custom domain or sub-domain url here</Heading>
+                                                <Form noValidate validated={customDomainValidated} onSubmit={handleNewDomainSubmit}>
+                                                    <Form.Control
+                                                        type="text"
+                                                        name="customdomain"
+                                                        placeholder="Domain/Subdomain URL"
+                                                        width="100%"
+                                                        required
+                                                        value={newCustomDomain}
+                                                        onChange={e => { setNewCustomDomain(e.target.value) }}
+                                                    />
+                                                    <button type="submit" className="btn btn-info btn-sm mt-2">
+                                                        Submit Custom Domain
+                                                {customDomainProcessing && <Loader type="Bars" color="#FFF" className="d-inline" className="d-inline" height={16} width={24} />}
+                                                    </button>
+                                                    {pageDetails.customDomain &&
+                                                        <>
+                                                            <Alert intent="none" marginTop={20} title="Custom Domain Exists">
+                                                                You have already configured the custom domain ['{pageDetails.customDomain}'] for this account. You can update it if required.
+                                                    </Alert>
+                                                            <Pane display="flex" flexDirection="column" marginTop={5} padding={10} background="purpleTint" borderRadius={3} elevation={4}>
+                                                                <Heading size={600} marginBottom={15}>DNS Configuration to make custom domain work<span>*</span></Heading>
+                                                                <Heading size={500} marginBottom={10}>Point {pageDetails.customDomain.split(".")[0]} CNAME record to hyperlyst-sites.netlify.app</Heading>
+                                                                <Text size={400} marginBottom={10}>Log in to the account you have with your DNS provider, and add a CNAME record for testcustom1 pointing to hyperlyst-sites.netlify.app.</Text>
+                                                                <kbd className="p-3">{pageDetails.customDomain.split(".")[0]} CNAME hyperlyst-sites.netlify.app.</kbd>
+                                                                <Text size={400} marginBottom={10} marginTop={10}>If you’ve already done this, allow up to 24 hours for the changes to propagate or check this <a className="text-primary" href="https://docs.netlify.com/domains-https/custom-domains/configure-external-dns/#configure-a-subdomain" target="_blank">documentation</a> for more information.</Text>
+                                                                <Text size={300} className="text-primary">* Completion of this step is very important else your pages wont be accessible via your custom domain</Text>
+                                                            </Pane>
+                                                        </>
+                                                    }
+                                                </Form>
+                                            </Pane>
+                                        </Pane>
+                                    </Pane>
+                                }
+                            </Tab>
+                            <Tab eventKey="access" title="Access" style={tabContent}>
+                                <Pane margin={10}>
+                                    <Heading size={600} marginBottom={10}>Manage what site actions would be access-driven</Heading>
+                                    <Button height={24} iconBefore="floppy-disk" appearance="primary"  onClick={() => { console.log("calling save") }}>
+                                        Save Changes
+                                    {settingsProcessing && <Loader type="Bars" color="#FFF" height={16} width={24} />}
+                                    </Button>
                                     <Pane display="flex" padding={10} background="tint2" borderRadius={3} elevation={4}>
                                         <Pane display="flex" float="left" flexDirection="column">
                                             <Pane display="flex">
-                                                <Switch margin={10}
-                                                    checked={usermgmtState}
-                                                    onChange={e => { setUsermgmtState(e.target.checked); changeUserManagement(pageDetails.slug, !pageDetails.usermanagement) }}
-                                                />
-                                                <Heading margin={8} size={500}>{`  `}Users</Heading>
-                                                {usermgmtProcessing && <Pane marginTop={5}><Loader type="Bars" color="#3d8bd4" height={16} width={24} /></Pane>}
+                                                <Switch margin={10} />
+                                                <Heading margin={8} size={500}>{`  `}Like items</Heading>
                                             </Pane>
                                             <Pane display="flex">
-                                                <Switch margin={10}
-                                                    checked={accessmgmtState}
-                                                    onChange={e => { setAccessmgmtState(e.target.checked); changeAccessManagement(pageDetails.slug, !pageDetails.accessmanagement) }}
-                                                />
-                                                <Heading margin={8} size={500}>{`  `}Access</Heading>
-                                                {accessmgmtProcessing && <Pane marginTop={5}><Loader type="Bars" color="#3d8bd4" height={16} width={24} /></Pane>}
+                                                <Switch margin={10} />
+                                                <Heading margin={8} size={500}>{`  `}Submit new item</Heading>
                                             </Pane>
                                             <Pane display="flex">
-                                                <Switch margin={10}
-                                                    checked={commentsmgmtState}
-                                                    onChange={e => { setCommentsmgmtState(e.target.checked); changeCommentsManagement(pageDetails.slug, !pageDetails.commentsmanagement) }}
-                                                />
-                                                <Heading margin={8} size={500}>{`  `}Comments</Heading>
-                                                {commentsmgmtProcessing && <Pane marginTop={5}><Loader type="Bars" color="#3d8bd4" height={16} width={24} /></Pane>}
+                                                <Switch margin={10} />
+                                                <Heading margin={8} size={500}>{`  `}Add comments</Heading>
                                             </Pane>
                                         </Pane>
                                     </Pane>
                                 </Pane>
-                            }
-
-                            {plan && plan != "free" &&
-                                <Pane marginTop={20} marginLeft={10}>
-                                    <Text size={400}>Google Analytics</Text>
-                                    <Pane display="flex" padding={20} background="tint2" borderRadius={3} elevation={4}>
-                                        <Pane display="flex" float="left" flexDirection="column">
-                                            <Heading marginBottom={8} size={500}>Enter Google Universal Analytics Tracking ID</Heading>
-                                            <Form noValidate validated={gaValidated} onSubmit={updateTrackingInfo}>
-                                                <Form.Control
-                                                    name="gaid"
-                                                    placeholder="UA-XXXXXXX-XX"
-                                                    width="100%"
-                                                    required
-                                                    value={gaID}
-                                                    onChange={e => { setGaID(e.target.value) }}
-                                                />
-                                                <button type="submit" className="btn btn-info btn-sm mt-2">
-                                                    Update Tracking Info
-                                                {gaProcessing && <Loader type="Bars" color="#FFF" className="d-inline" height={16} width={24} />}
-                                                </button>
-                                            </Form>
-                                        </Pane>
+                            </Tab>
+                            <Tab eventKey="dangerzone" title="Danger Zone" style={tabContent}>
+                                <Pane margin={10} padding={10} background="tint2" borderRadius={3} elevation={4}>
+                                    <Text size={400} color="red">Delete Page</Text>
+                                    <Pane display="flex" margin={10}>
+                                        <IconButton icon="trash" appearance="primary" intent="danger" onClick={() => { if (window.confirm('Are you sure you wish to delete this item?')) deleteProject(pageDetails.slug) }}></IconButton>
                                     </Pane>
                                 </Pane>
-                            }
-
-                            {plan && plan != "free" &&
-                                <Pane marginTop={20} marginLeft={10}>
-                                    <Text size={400}>Add Custom Domain</Text>
-                                    <Pane display="flex" padding={20} background="tint2" borderRadius={3} elevation={4}>
-                                        <Pane display="flex" float="left" flexDirection="column">
-                                            <Heading marginBottom={8} size={500}>Enter custom domain or sub-domain url here</Heading>
-                                            <Form noValidate validated={customDomainValidated} onSubmit={handleNewDomainSubmit}>
-                                                <Form.Control
-                                                    type="text"
-                                                    name="customdomain"
-                                                    placeholder="Domain/Subdomain URL"
-                                                    width="100%"
-                                                    required
-                                                    value={newCustomDomain}
-                                                    onChange={e => { setNewCustomDomain(e.target.value) }}
-                                                />
-                                                <button type="submit" className="btn btn-info btn-sm mt-2">
-                                                    Submit Custom Domain
-                                                {customDomainProcessing && <Loader type="Bars" color="#FFF" className="d-inline" className="d-inline" height={16} width={24} />}
-                                                </button>
-                                                {pageDetails.customDomain &&
-                                                    <>
-                                                        <Alert intent="none" marginTop={20} title="Custom Domain Exists">
-                                                            You have already configured the custom domain ['{pageDetails.customDomain}'] for this account. You can update it if required.
-                                                    </Alert>
-                                                        <Pane display="flex" flexDirection="column" marginTop={5} padding={10} background="purpleTint" borderRadius={3} elevation={4}>
-                                                            <Heading size={600} marginBottom={15}>DNS Configuration to make custom domain work<span>*</span></Heading>
-                                                            <Heading size={500} marginBottom={10}>Point {pageDetails.customDomain.split(".")[0]} CNAME record to hyperlyst-sites.netlify.app</Heading>
-                                                            <Text size={400} marginBottom={10}>Log in to the account you have with your DNS provider, and add a CNAME record for testcustom1 pointing to hyperlyst-sites.netlify.app.</Text>
-                                                            <kbd className="p-3">{pageDetails.customDomain.split(".")[0]} CNAME hyperlyst-sites.netlify.app.</kbd>
-                                                            <Text size={400} marginBottom={10} marginTop={10}>If you’ve already done this, allow up to 24 hours for the changes to propagate or check this <a className="text-primary" href="https://docs.netlify.com/domains-https/custom-domains/configure-external-dns/#configure-a-subdomain" target="_blank">documentation</a> for more information.</Text>
-                                                            <Text size={300} className="text-primary">* Completion of this step is very important else your pages wont be accessible via your custom domain</Text>
-                                                        </Pane>
-                                                    </>
-                                                }
-                                            </Form>
-                                        </Pane>
-                                    </Pane>
-                                </Pane>
-                            }
-                        </Tab>
-                        <Tab eventKey="access" title="Access" style={tabContent}>
-                            <Heading size={400}>Manage what site actions would be access-driven</Heading>
-                            <button type="button" className="btn btn-info btn-sm mt-2">
-                                Save Changes
-                            </button>
-                            <Pane display="flex" padding={10} background="tint2" borderRadius={3} elevation={4}>
-                                <Pane display="flex" float="left" flexDirection="column">
-                                    <Pane display="flex">
-                                        <Switch margin={10} />
-                                        <Heading margin={8} size={500}>{`  `}Like items</Heading>
-                                    </Pane>
-                                    <Pane display="flex">
-                                        <Switch margin={10} />
-                                        <Heading margin={8} size={500}>{`  `}Submit new item</Heading>
-                                    </Pane>
-                                    <Pane display="flex">
-                                        <Switch margin={10} />
-                                        <Heading margin={8} size={500}>{`  `}Add comments</Heading>
-                                    </Pane>
-                                </Pane>
-                            </Pane>
-                        </Tab>
-                        <Tab eventKey="dangerzone" title="Danger Zone" style={tabContent}>
-                            <Text size={400}>Delete Page</Text>
-                            <Pane display="flex" margin={10}>
-                                <IconButton icon="trash" appearance="primary" intent="danger" onClick={() => { if (window.confirm('Are you sure you wish to delete this item?')) deleteProject(pageDetails.slug) }}></IconButton>
-                            </Pane>
-                        </Tab>
-                    </Tabs>
+                            </Tab>
+                        </Tabs>
+                    </div>
                 </div>
             </div>
-        </div>
+        </CloudinaryContext>
     )
 }
 
