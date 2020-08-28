@@ -43,19 +43,19 @@ const PageDetailsTabLabels = ({ pageDetails }) => {
     const [successMsgSignupForm, setSuccessMsgSignupForm] = React.useState(labelsData.successMsgSignupForm || 'User registration successful. Please use your credentials to login to the site now.');
     const [warningBeforeLogout, setWarningBeforeLogout] = React.useState(labelsData.warningBeforeLogout || 'Are you sure you want to Logout from the Site?');
     const [successMsgLogout, setSuccessMsgLogout] = React.useState(labelsData.successMsgLogout || 'Logged out successfully');
-    const [titleCreateForm, setTitleCreateForm] = React.useState(labelsData.titleCreateForm || 'Submit a Product');
-    const [lblRecordName, setLblRecordName] = React.useState(labelsData.lblRecordName || 'Product Name');
-    const [placeholderRecordName, setPlaceholderRecordName] = React.useState(labelsData.placeholderRecordName || 'Supply the name of the product');
+    const [titleCreateForm, setTitleCreateForm] = React.useState(labelsData.titleCreateForm || 'Submit a Record');
+    const [lblRecordName, setLblRecordName] = React.useState(labelsData.lblRecordName || 'Record Name');
+    const [placeholderRecordName, setPlaceholderRecordName] = React.useState(labelsData.placeholderRecordName || 'Supply the name of the record');
     const [lblTagline, setLblTagline] = React.useState(labelsData.lblTagline || 'Tagline');
-    const [placeholderTagline, setPlaceholderTagline] = React.useState(labelsData.placeholderTagline || 'Concise tagline for the product');
+    const [placeholderTagline, setPlaceholderTagline] = React.useState(labelsData.placeholderTagline || 'Concise tagline for the record');
     const [lblDescription, setLblDescription] = React.useState(labelsData.lblDescription || 'Description');
-    const [placeholderDescription, setPlaceholderDescription] = React.useState(labelsData.placeholderDescription || 'Brief description of the product');
-    const [lblRecordURL, setLblRecordURL] = React.useState(labelsData.lblRecordURL || 'Product URL');
-    const [placeholderRecordURL, setPlaceholderRecordURL] = React.useState(labelsData.placeholderRecordURL || 'Product URL');
-    const [btnUploadRecordImage, setBtnUploadRecordImage] = React.useState(labelsData.btnUploadRecordImage || 'Upload Product Image');
-    const [lblSubmit, setLblSubmit] = React.useState(labelsData.lblSubmit || 'Submit Product');
-    const [errorMsgCreateForm, setErrorMsgCreateForm] = React.useState(labelsData.errorMsgCreateForm || 'Error while submitting the product');
-    const [successMsgCreateForm, setSuccessMsgCreateForm] = React.useState(labelsData.successMsgCreateForm || 'Product submitted successfully');
+    const [placeholderDescription, setPlaceholderDescription] = React.useState(labelsData.placeholderDescription || 'Brief description of the record');
+    const [lblRecordURL, setLblRecordURL] = React.useState(labelsData.lblRecordURL || 'Record URL');
+    const [placeholderRecordURL, setPlaceholderRecordURL] = React.useState(labelsData.placeholderRecordURL || 'Record URL');
+    const [btnUploadRecordImage, setBtnUploadRecordImage] = React.useState(labelsData.btnUploadRecordImage || 'Upload Record Image');
+    const [lblSubmit, setLblSubmit] = React.useState(labelsData.lblSubmit || 'Submit Record');
+    const [errorMsgCreateForm, setErrorMsgCreateForm] = React.useState(labelsData.errorMsgCreateForm || 'Error while submitting the record');
+    const [successMsgCreateForm, setSuccessMsgCreateForm] = React.useState(labelsData.successMsgCreateForm || 'Record submitted successfully');
 
     const saveLabels = (slug) => {
         toaster.closeAll()

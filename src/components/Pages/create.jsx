@@ -31,9 +31,50 @@ const PageCreate = ({ location }) => {
     const [tableName, setTableName] = React.useState(selectedTemplate.airtableDefaultTablename);
     const [viewName, setViewName] = React.useState(selectedTemplate.airtableDefaultViewname);
 
-    React.useEffect(() => {
-
-    })
+    const defaultLabels = {
+        errorMsgNoAccess: 'Please Login OR Register for this feature',
+        lblLogin: 'Log In',
+        lblSignup: 'Sign Up',
+        lblLogout: 'Log Out',
+        titleList: 'Today',
+        titleLoginForm: 'Login on the site',
+        descriptionLoginForm: 'Login to our community of friendly folks.',
+        lblEmailLoginForm: 'E-mail',
+        placeholderEmailLoginForm: 'E-mail',
+        lblPasswordLoginForm: 'Password',
+        placeholderPasswordLoginForm: 'Password',
+        footerLoginForm: 'We will never post to any of your accounts without your permission.',
+        btnLoginLoginForm: 'Login',
+        btnCloseLoginForm: 'Close',
+        successMsgLoginForm: 'Logged in successfully',
+        titleSignupForm: 'Signup with us',
+        descriptionSignupForm: 'Signup with our community of friendly folks.',
+        lblEmailSignupForm: 'Enter your E-mail address',
+        placeholderEmailSignupForm: 'E-mail',
+        lblPasswordSignupForm: 'Enter your Password',
+        placeholderPasswordSignupForm: 'Password',
+        lblFullnameSignupForm: 'Enter your Fullname',
+        placeholderFullnameSignupForm: 'Fullname',
+        footerSignupForm: 'We will never post to any of your accounts without your permission.',
+        btnRegisterSignupForm: 'Register',
+        btnCloseSignupForm: 'Close',
+        successMsgSignupForm: 'User registration successful. Please use your credentials to login to the site now.',
+        warningBeforeLogout: 'Are you sure you want to Logout from the Site?',
+        successMsgLogout: 'Logged out successfully',
+        titleCreateForm: 'Submit a Record',
+        lblRecordName: 'Record Name',
+        placeholderRecordName: 'Supply the name of the record',
+        lblTagline: 'Tagline',
+        placeholderTagline: 'Concise tagline for the record',
+        lblDescription: 'Description',
+        placeholderDescription: 'Brief description of the record',
+        lblRecordURL: 'Record URL',
+        placeholderRecordURL: 'Record URL',
+        btnUploadRecordImage: 'Upload Record Image',
+        lblSubmit: 'Submit Record',
+        errorMsgCreateForm: 'Error while submitting the record',
+        successMsgCreateForm: 'Record submitted successfully',
+    };
 
     function handleSubmit(event) {
         const form = event.currentTarget;
@@ -62,7 +103,10 @@ const PageCreate = ({ location }) => {
                 apiKey,
                 baseId,
                 tableName,
-                viewName
+                viewName,
+                data: {
+                    labels: defaultLabels
+                }
             };
 
             console.log("*********** createpage")
