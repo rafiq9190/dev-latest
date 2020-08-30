@@ -5,13 +5,13 @@ import { Form, Tabs, Tab } from 'react-bootstrap';
 import { getUser, getUserExtras, getUserType } from "../../utils/auth"
 import { refreshUserExtras } from "../../utils/firebaseHelpers"
 import firebase from "gatsby-plugin-firebase"
-import { Alert, IconButton, toaster, Pane, Heading, Text, TextInputField, FilePicker, Button, Switch } from "evergreen-ui"
+import { Alert, Icon, toaster, Pane, Heading, Text, Link, Code, Dialog, Switch } from "evergreen-ui"
 import Loader from 'react-loader-spinner'
 import NetlifyAPI from 'netlify'
 import SiteConfig from "../../config/site"
 
 const PageDetailsTabPaid = ({ pageDetails }) => {
-    
+
     const user = getUser();
     let userExtras = getUserExtras();
 
@@ -30,11 +30,17 @@ const PageDetailsTabPaid = ({ pageDetails }) => {
     const [gaID, setGaID] = React.useState(pageDetails.googleAnalyticsId);
     const [gaValidated, setGaValidated] = React.useState(false);
     const [gaProcessing, setGaProcessing] = React.useState(false);
+
     const [customDomainValidated, setCustomDomainValidated] = React.useState(false);
     const [customDomainProcessing, setCustomDomainProcessing] = React.useState(false);
     const [newCustomDomain, setNewCustomDomain] = React.useState(pageDetails.customDomain);
     const [netlifySite, setNetlifySite] = React.useState();
     const [existingDomains, setExistingDomains] = React.useState();
+
+    const [crispChatID, setCrispChatID] = React.useState(pageDetails.crispChatId);
+    const [crispChatValidated, setCrispChatValidated] = React.useState(false);
+    const [crispChatProcessing, setCrispChatProcessing] = React.useState(false);
+    const [crispChatHelpShown, setCrispChatHelpShown] = React.useState(false);
 
     React.useEffect(() => {
         console.log("**** useEffect")
@@ -227,6 +233,32 @@ const PageDetailsTabPaid = ({ pageDetails }) => {
         }
     };
 
+    const updateCrispChatInfo = (event) => {
+        const form = event.currentTarget;
+        event.preventDefault();
+        event.stopPropagation();
+        setCrispChatValidated(true);
+        if (form.checkValidity()) {
+            toaster.closeAll()
+            setCrispChatProcessing(true)
+            //Free plan restriction
+            if (plan && plan == "free") {
+                toaster.danger("Crisp Chat feature is NOT available on FREE plan. Please upgrade to use this feature")
+                setCrispChatProcessing(false);
+                return;
+            }
+
+            firebase
+                .database()
+                .ref()
+                .child(`users/${user.uid}/projects/${pageDetails.slug}/crispChatId`)
+                .set(crispChatID)
+                .then(() => { refreshUserExtras(user); })
+                .then(() => { setCrispChatProcessing(false) })
+                .then(() => { toaster.success('Crisp Chat ID is updated successfully. You will be redirected to Dashboard in 5 seconds') })
+                .then(() => { setTimeout(function () { navigate(`/dashboard/`, { replace: true }) }, 5000); })
+        }
+    };
 
     return (
         <>
@@ -269,7 +301,7 @@ const PageDetailsTabPaid = ({ pageDetails }) => {
                     <Text size={400}>Google Analytics</Text>
                     <Pane display="flex" padding={20} background="tint2" borderRadius={3} elevation={4}>
                         <Pane display="flex" float="left" flexDirection="column">
-                            <Heading marginBottom={8} size={500}>Enter Google Universal Analytics Tracking ID</Heading>
+                            <h6>Enter Google Universal Analytics Tracking ID</h6>
                             <Form noValidate validated={gaValidated} onSubmit={updateTrackingInfo}>
                                 <Form.Control
                                     name="gaid"
@@ -294,7 +326,7 @@ const PageDetailsTabPaid = ({ pageDetails }) => {
                     <Text size={400}>Add Custom Domain</Text>
                     <Pane display="flex" padding={20} background="tint2" borderRadius={3} elevation={4}>
                         <Pane display="flex" float="left" flexDirection="column">
-                            <Heading marginBottom={8} size={500}>Enter custom domain or sub-domain url here</Heading>
+                            <h6>Enter custom domain or sub-domain url here</h6>
                             <Form noValidate validated={customDomainValidated} onSubmit={handleNewDomainSubmit}>
                                 <Form.Control
                                     type="text"
@@ -325,6 +357,54 @@ const PageDetailsTabPaid = ({ pageDetails }) => {
                                     </>
                                 }
                             </Form>
+                        </Pane>
+                    </Pane>
+                </Pane>
+            }
+
+            {plan && plan != "free" &&
+                <Pane marginTop={20} marginLeft={10}>
+                    <Text size={400}>Crisp Chat</Text>
+                    <Pane display="flex" padding={20} background="tint2" borderRadius={3} elevation={4}>
+                        <Pane display="flex" float="left" flexDirection="column">
+                            <h6>
+                                Enter Website ID of Crisp Chat &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <Icon size={24} style={{ cursor: "hand" }} marginLeft={5} icon="help" title="Click to see more details" color="muted" onClick={() => setCrispChatHelpShown(true)} />
+                            </h6>
+                            <Form noValidate validated={crispChatValidated} onSubmit={updateCrispChatInfo}>
+                                <Form.Control
+                                    name="crispchatid"
+                                    placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                                    width="100%"
+                                    required
+                                    value={crispChatID}
+                                    onChange={e => { setCrispChatID(e.target.value) }}
+                                />
+                                <button type="submit" className="btn btn-info btn-sm mt-2">
+                                    Update Crisp Chat Info
+                                    {crispChatProcessing && <Loader type="Bars" color="#FFF" className="d-inline" height={16} width={24} />}
+                                </button>
+                            </Form>
+                            <Dialog
+                                isShown={crispChatHelpShown}
+                                title="Help - How to get Crisp Chat Website ID"
+                                confirmLabel="Close"
+                                onCloseComplete={() => setCrispChatHelpShown(false)}
+                            >
+                                <Pane display="flex" flexDirection='column' margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
+                                    <Text>
+                                        <b>Follow below steps to get the "Website ID" from your "Crisp Chat" account:</b>
+                                        <ol>
+                                            <li>Create an account on Crisp. OR Login to Crisp account</li>
+                                            <li>Go to <Code>Settings</Code>. Then, <Code>Website Settings.</Code></li>
+                                            <li>Next to your website, click on <Code>Settings.</Code></li>
+                                            <li>Click on <Code>Setup instructions.</Code></li>
+                                            <li>Select and Copy <Code>Website ID</Code></li>
+                                        </ol>
+                                    </Text>
+
+                                </Pane>                                
+                            </Dialog>
                         </Pane>
                     </Pane>
                 </Pane>
