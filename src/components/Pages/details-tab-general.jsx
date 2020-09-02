@@ -5,7 +5,7 @@ import SiteConfig from "../../config/site"
 import { getUser, getUserExtras, getUserType } from "../../utils/auth"
 import { refreshUserExtras } from "../../utils/firebaseHelpers"
 import firebase from "gatsby-plugin-firebase"
-import { Alert, toaster, Pane, Heading, Text, Button, Switch } from "evergreen-ui"
+import { Alert, toaster, Pane, Heading, Text, Button, Code } from "evergreen-ui"
 import Loader from 'react-loader-spinner'
 
 const PageDetailsTabGeneral = ({ pageDetails }) => {
@@ -14,7 +14,7 @@ const PageDetailsTabGeneral = ({ pageDetails }) => {
 
     const plan = getUserType();
     const publicdomain = pageDetails.customDomain ? ("http://" + pageDetails.customDomain) : "https://sites.hyperlyst.com"
-    const publishedCount = (userExtras && userExtras.projects) ? _.filter(userExtras.projects, { published: true }).length : 0;    
+    const publishedCount = (userExtras && userExtras.projects) ? _.filter(userExtras.projects, { published: true }).length : 0;
     const MaxProjectsInFreePlan = 1;
 
     const [publishProcessing, setPublishProcessing] = React.useState(false);
@@ -85,16 +85,41 @@ const PageDetailsTabGeneral = ({ pageDetails }) => {
 
             <Pane display="flex" marginLeft={10} marginRight={10} padding={10} background="tint2" borderRadius={3} elevation={4}>
                 <Pane display="flex" float="left" flexDirection="column">
-                    <Heading size={500}>Project Template Code</Heading>
+                    <Heading size={500}>Page Template Code</Heading>
                     <Text size={400} marginBottom={10}>{pageDetails && pageDetails.selectedTemplate}</Text>
-                    <Heading size={500}>Airtable API Key</Heading>
-                    <Text size={400} marginBottom={10}>{pageDetails && pageDetails.apiKey}</Text>
-                    <Heading size={500}>Airtable Base ID</Heading>
-                    <Text size={400} marginBottom={10}>{pageDetails && pageDetails.baseId}</Text>
-                    <Heading size={500}>Airtable Table Name</Heading>
-                    <Text size={400} marginBottom={10}>{pageDetails && pageDetails.tableName}</Text>
-                    <Heading size={500}>Airtable View Name</Heading>
-                    <Text size={400}>{pageDetails && pageDetails.viewName}</Text>
+                    <Heading size={500}>Page Data Source is</Heading>
+                    <Text size={400} marginBottom={10}><Code>{pageDetails && pageDetails.googleSheetsKey ? "Google Sheet" : "Airtable"}</Code></Text>
+                    
+                    {pageDetails && pageDetails.apiKey &&
+                        <>
+                            <Heading size={500}>Airtable API Key</Heading>
+                            <Text size={400} marginBottom={10}>{pageDetails.apiKey}</Text>
+                        </>
+                    }
+                    {pageDetails && pageDetails.baseId &&
+                        <>
+                            <Heading size={500}>Airtable Base ID</Heading>
+                            <Text size={400} marginBottom={10}>{pageDetails.baseId}</Text>
+                        </>
+                    }
+                    {pageDetails && pageDetails.tableName &&
+                        <>
+                            <Heading size={500}>Airtable Table Name</Heading>
+                            <Text size={400} marginBottom={10}>{pageDetails.tableName}</Text>
+                        </>
+                    }
+                    {pageDetails && pageDetails.viewName &&
+                        <>
+                            <Heading size={500}>Airtable View Name</Heading>
+                            <Text size={400} marginBottom={10}>{pageDetails.viewName}</Text>
+                        </>
+                    }
+                    {pageDetails && pageDetails.googleSheetsKey &&
+                        <>
+                            <Heading size={500}>Google sheets key</Heading>
+                            <Text size={400} marginBottom={10}>{pageDetails.googleSheetsKey}</Text>
+                        </>
+                    }
                 </Pane>
             </Pane>
         </>

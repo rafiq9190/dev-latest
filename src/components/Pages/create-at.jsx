@@ -1,5 +1,5 @@
 import React from "react"
-import { Dialog, Position, Icon, toaster, Pane, Heading, Text, TextInputField, Button } from "evergreen-ui"
+import { Dialog, Code, Icon, toaster, Pane, Heading, Text, TextInputField, Button } from "evergreen-ui"
 import _ from 'lodash'
 import { Form } from 'react-bootstrap'
 import { getUser, getUserExtras, getUserType } from "../../utils/auth"
@@ -8,7 +8,7 @@ import firebase from "gatsby-plugin-firebase"
 import { navigate } from "gatsby"
 import Loader from 'react-loader-spinner'
 
-const PageCreate = ({ location }) => {
+const PageCreateAirtable = ({ location }) => {
     const { state = {} } = location
     const { template } = state
 
@@ -131,6 +131,7 @@ const PageCreate = ({ location }) => {
                     <div className="col mb-3">
                         <Pane display="flex" margin={10} flexDirection="column">
                             <Heading size={600} marginBottom={5}>Selected Template : {selectedTemplate && selectedTemplate.name}</Heading>
+                            <Text>Configure template with <Code>Airtable</Code> details</Text>
                         </Pane>
 
 
@@ -285,7 +286,7 @@ const PageCreate = ({ location }) => {
             >
                 <Pane display="flex" flexDirection='column' margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
                     <Heading>Page Title</Heading>
-                    <Text>This title will be diisplayed on top of your page</Text>
+                    <Text>This title will be displayed on top of your page</Text>
                     <Heading marginTop={10}>Page Slug</Heading>
                     <Text>Slug needs to be unique for your account. This slug would be appended the resultant URL of your page</Text>
                 </Pane>
@@ -294,4 +295,4 @@ const PageCreate = ({ location }) => {
     )
 }
 
-export default PageCreate
+export default PageCreateAirtable

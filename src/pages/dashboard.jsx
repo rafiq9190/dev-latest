@@ -3,10 +3,10 @@ import { Router } from "@reach/router"
 import Layout from "../components/Layout"
 import Profile from "../components/Profile"
 import Activation from "../components/Activation"
-import PageCreate from "../components/Pages/create"
+import PageCreateAirtable from "../components/Pages/create-at"
+import PageCreateGoogleSheets from "../components/Pages/create-gs"
 import PageDetails from "../components/Pages/details"
 import TemplateSelect from "../components/Pages/select"
-import PageCreateOld from "../components/Pages/create-bkup"
 import Pages from "../components/Pages"
 import Login from "../components/Login"
 import Logout from "../components/Logout"
@@ -22,7 +22,8 @@ const Dashboard = ({location}) => {
           <PrivateRoute path="/dashboard/" component={Pages} />
           <PrivateRoute path="/dashboard/pages" component={Pages} />          
           <PrivateRoute path="/dashboard/page/select" component={TemplateSelect} />
-          <PrivateRoute path="/dashboard/page/create" component={PageCreate} />
+          <PrivateRoute path="/dashboard/page/create-airtable" component={PageCreateAirtable} />
+          <PrivateRoute path="/dashboard/page/create-googlesheets" component={PageCreateGoogleSheets} />
           <PrivateRoute path="/dashboard/page/details" component={PageDetails} />
           <PrivateRoute path="/dashboard/profile" component={Profile} />
           <PrivateRoute path="/dashboard/activate" component={Activation} />
