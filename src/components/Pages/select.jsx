@@ -42,7 +42,9 @@ const TemplateSelect = ({ location }) => {
                                     <Card.Subtitle>{item.description}</Card.Subtitle>
                                     <ListGroup className="mt-3">
                                         <ListGroup.Item>
-                                            <Card.Text className="m-0">Airtable Option</Card.Text>
+                                            <Card.Text className="m-0">
+                                                <img src="/images/airtable-logo.png" height="32px" />
+                                            </Card.Text>
                                             <Button height={32} marginTop={10} marginRight={16} iconBefore="applications" appearance="primary" intent="success" onClick={() => navigate("/dashboard/page/create-airtable", { state: { template: item } })}>
                                                 Select
                                         </Button>
@@ -51,7 +53,9 @@ const TemplateSelect = ({ location }) => {
                                         </Button>
                                         </ListGroup.Item>
                                         <ListGroup.Item>
-                                            <Card.Text className="m-0">Google Sheets Option</Card.Text>
+                                            <Card.Text className="m-0">
+                                                <img src="/images/googlesheets-logo.png" height="32px" />
+                                            </Card.Text>
                                             <Button height={32} marginTop={10} marginRight={16} iconBefore="applications" appearance="primary" intent="success" onClick={() => navigate("/dashboard/page/create-googlesheets", { state: { template: item } })}>
                                                 Select
                                         </Button>

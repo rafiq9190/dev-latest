@@ -142,7 +142,10 @@ const PageCreateAirtable = ({ location }) => {
                                     <Text>
                                         Copy our airtable template base by clicking "Copy Template Base" button.
                                         It will open a new browser tab. Switch to the newly opend tab and
-                                        click on "Copy base" (in the upper right corner) to copy it to your Airtable account.
+                                        click on "Copy base" (in the upper right corner) to copy it to your Airtable account.                                        
+                                    </Text>
+                                    <Text>
+                                        <b><i>NOTE:</i></b> Please donot change the table names in the Airtable base. Keep it to match the names as per the template.
                                     </Text>
                                     <Pane display="flex">
                                         <Button appearance="primary" iconAfter="share" marginTop={10} onClick={() => { window.open(selectedTemplate.airtableBaseCopy, '_blank') }}>

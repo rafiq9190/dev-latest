@@ -136,6 +136,9 @@ const PageCreateGoogleSheets = ({ location }) => {
                                         It will open a new browser tab. Switch to the newly opend tab and
                                         click on "Make a copy" button to copy it to your Google account.
                                     </Text>
+                                    <Text>
+                                        <b><i>NOTE:</i></b> Please donot change the name of the sheets. Keep it to match the names as per the template.
+                                    </Text>
                                     <Pane display="flex">
                                         <Button appearance="primary" iconAfter="share" marginTop={10} onClick={() => { window.open(selectedTemplate.googleSheetsTemplateCopy, '_blank') }}>
                                             Copy Template Sheet
