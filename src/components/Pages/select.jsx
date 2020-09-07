@@ -36,7 +36,7 @@ const TemplateSelect = ({ location }) => {
                     {templates && Object.values(templates).map((item, index) => (
                         <div className="col-lg-4 mb-3" key={index}>
                             <Card>
-                                <Card.Img variant="top" height="280px" style={{ objectFit: 'cover' }} src={`/images/${item.id}.png`} />
+                                <Card.Img className="p-1" variant="top" height="280px" style={{ objectFit: 'contain' }} src={`/images/${item.id}.png`} />
                                 <Card.Body>
                                     <Card.Title>{item.name}</Card.Title>
                                     <Card.Subtitle>{item.description}</Card.Subtitle>
