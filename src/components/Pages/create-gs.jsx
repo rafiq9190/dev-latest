@@ -20,8 +20,8 @@ const PageCreateGoogleSheets = ({ location }) => {
     const [processing, setProcessing] = React.useState(false);
 
     const [isStep1HelpShown, setIsStep1HelpShown] = React.useState(false);
-    const [isStep2HelpShown, setIsStep2HelpShown] = React.useState(false);
     const [isStep4HelpShown, setIsStep4HelpShown] = React.useState(false);
+    const [isStep5HelpShown, setIsStep5HelpShown] = React.useState(false);
     const [isStep6HelpShown, setIsStep6HelpShown] = React.useState(false);
     const [selectedTemplate, setSelectedTemplate] = React.useState(template);
     const [title, setTitle] = React.useState();
@@ -253,14 +253,14 @@ const PageCreateGoogleSheets = ({ location }) => {
                                     <Pane display="flex" float="left" flexDirection="column">
                                         <Heading size={500}>Step.5 - Share Sheet to Service Account</Heading>
                                         <Text marginTop={10}>
-                                            Share the sheet with your service account using the email noted above
+                                            Share the sheet with your service account using the email noted above.
                                         </Text>
-                                        <Text>
-                                            e.g.
-                                            <img src="/images/google-sheets-share.png" width="100%" />
+                                        <Text marginTop={10}>
+                                            <strong>NOTE: </strong>This is important step for Google sheet to work with this application
                                         </Text>
                                     </Pane>
                                 </Pane>
+                                <Icon size={32} style={{ cursor: "hand" }} marginLeft={5} icon="help" title="Click to see more details" color="muted" onClick={() => setIsStep5HelpShown(true)} />
                             </Pane>
 
                             <Pane display="flex" margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
@@ -316,6 +316,22 @@ const PageCreateGoogleSheets = ({ location }) => {
                 </Pane>
                 <Pane display="flex" flexDirection='column' margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
                     <img src="/images/copy-sheet-example.png" width="100%" />
+                </Pane>
+            </Dialog>
+
+            <Dialog
+                isShown={isStep5HelpShown}
+                title="Step.5 - Help"
+                confirmLabel="Ok"
+                onCloseComplete={() => setIsStep5HelpShown(false)}
+            >
+                <Pane display="flex" flexDirection='column' margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
+                    <Heading>
+                        "Share" your googlesheet with the email of your service account
+                    </Heading>
+                </Pane>
+                <Pane display="flex" flexDirection='column' margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
+                    <img src="/images/google-sheets-share.png" width="100%" />
                 </Pane>
             </Dialog>
             

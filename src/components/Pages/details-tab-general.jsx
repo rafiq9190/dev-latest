@@ -88,7 +88,7 @@ const PageDetailsTabGeneral = ({ pageDetails }) => {
                     <Heading size={500}>Page Template Code</Heading>
                     <Text size={400} marginBottom={10}>{pageDetails && pageDetails.selectedTemplate}</Text>
                     <Heading size={500}>Page Data Source is</Heading>
-                    <Text size={400} marginBottom={10}><Code>{pageDetails && pageDetails.googleSheetsKey ? "Google Sheet" : "Airtable"}</Code></Text>
+                    <Text size={400} marginBottom={10}><Code>{pageDetails && pageDetails.googleSheetID ? "Google Sheet" : "Airtable"}</Code></Text>
                     
                     {pageDetails && pageDetails.apiKey &&
                         <>
@@ -114,10 +114,22 @@ const PageDetailsTabGeneral = ({ pageDetails }) => {
                             <Text size={400} marginBottom={10}>{pageDetails.viewName}</Text>
                         </>
                     }
-                    {pageDetails && pageDetails.googleSheetsKey &&
+                    {pageDetails && pageDetails.googleSheetID &&
                         <>
-                            <Heading size={500}>Google sheets key</Heading>
-                            <Text size={400} marginBottom={10}>{pageDetails.googleSheetsKey}</Text>
+                            <Heading size={500}>Google sheets ID</Heading>
+                            <Text size={400} marginBottom={10}>{pageDetails.googleSheetID}</Text>
+                        </>
+                    }
+                    {pageDetails && pageDetails.googleSheetsClientEmail &&
+                        <>
+                            <Heading size={500}>Google sheets client email</Heading>
+                            <Text size={400} marginBottom={10}>{pageDetails.googleSheetClientEmail}</Text>
+                        </>
+                    }
+                    {pageDetails && pageDetails.googleSheetPrivateKey &&
+                        <>
+                            <Heading size={500}>Google sheets private key</Heading>
+                            <Text size={400} marginBottom={10}>{pageDetails.googleSheetPrivateKey}</Text>
                         </>
                     }
                 </Pane>
