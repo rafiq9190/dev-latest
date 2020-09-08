@@ -1,5 +1,5 @@
 import React from "react"
-import { Dialog, Code, Icon, toaster, Pane, Heading, Text, TextInputField, Button } from "evergreen-ui"
+import { Dialog, Code, Icon, toaster, Pane, Heading, Text, TextareaField, TextInputField, Button } from "evergreen-ui"
 import _ from 'lodash'
 import { Form } from 'react-bootstrap'
 import { getUser, getUserExtras, getUserType } from "../../utils/auth"
@@ -22,10 +22,13 @@ const PageCreateGoogleSheets = ({ location }) => {
     const [isStep1HelpShown, setIsStep1HelpShown] = React.useState(false);
     const [isStep2HelpShown, setIsStep2HelpShown] = React.useState(false);
     const [isStep4HelpShown, setIsStep4HelpShown] = React.useState(false);
+    const [isStep6HelpShown, setIsStep6HelpShown] = React.useState(false);
     const [selectedTemplate, setSelectedTemplate] = React.useState(template);
     const [title, setTitle] = React.useState();
     const [slug, setSlug] = React.useState("");
-    const [googleSheetsKey, setGoogleSheetsKey] = React.useState("");
+    const [googleSheetID, setGoogleSheetID] = React.useState("");
+    const [googleSheetPrivateKey, setGoogleSheetPrivateKey] = React.useState("");
+    const [googleSheetClientEmail, setGoogleSheetClientEmail] = React.useState("");
 
     const defaultLabels = {
         errorMsgNoAccess: 'Please Login OR Register for this feature',
@@ -78,7 +81,7 @@ const PageCreateGoogleSheets = ({ location }) => {
         event.stopPropagation();
         setValidated(true);
 
-        if (!selectedTemplate || !title || !slug || !googleSheetsKey) {
+        if (!selectedTemplate || !title || !slug || !googleSheetID) {
             toaster.danger("Please enter details for all mandatory fields")
             return;
         }
@@ -96,7 +99,9 @@ const PageCreateGoogleSheets = ({ location }) => {
                 selectedTemplate: selectedTemplate.id,
                 title,
                 slug,
-                googleSheetsKey,                
+                googleSheetID,
+                googleSheetPrivateKey,
+                googleSheetClientEmail,
                 data: {
                     labels: defaultLabels
                 }
@@ -130,7 +135,7 @@ const PageCreateGoogleSheets = ({ location }) => {
                         <Pane display="flex" margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
                             <Pane display="flex">
                                 <Pane display="flex" float="left" flexDirection="column">
-                                    <Heading size={500}>Step.1</Heading>
+                                    <Heading size={500}>Step.1 - Copy Template</Heading>
                                     <Text>
                                         Login to your Google account and Copy our googlesheets template by clicking "Copy Template Sheet" button.
                                         It will open a new browser tab. Switch to the newly opend tab and
@@ -152,24 +157,30 @@ const PageCreateGoogleSheets = ({ location }) => {
                         <Form noValidate validated={validated} onSubmit={handleSubmit}>
                             <Pane display="flex" margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
                                 <Pane display="flex" float="left" flexDirection="column">
-                                    <Heading size={500}>Step.2</Heading>
+                                    <Heading size={500}>Step.2 - Enable the Sheets API</Heading>
                                     <Text marginTop={10}>
                                         <ol>
-                                            <li>Open the <Code>File</Code> menu and click <Code>Publish to web</Code></li>
-                                            <li>Towards the bottom select <Code>Start publishing</Code>.</li>
+                                            <li>Go to the <a href="https://console.developers.google.com/" target="_blank">Google Developers Console</a></li>
+                                            <li>Select your project or create a new one (and then select it)</li>
+                                            <li>Enable the Sheets API for your project</li>
+                                            <ul>
+                                                <li>In the sidebar on the left, select <Code>APIs &amp; Services > Library</Code></li>
+                                                <li>Search for "sheets"</li>
+                                                <li>Click on <Code>"Google Sheets API"</Code></li>
+                                                <li>click the blue <Code>"Enable"</Code> button</li>
+                                            </ul>
                                         </ol>
                                     </Text>
-                                </Pane>
-                                <Icon size={24} style={{ cursor: "hand" }} marginLeft={5} icon="help" title="Click to see more details" color="muted" onClick={() => setIsStep2HelpShown(true)} />
+                                </Pane>                                
                             </Pane>
 
                             <Pane display="flex" margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
                                 <Pane display="flex">
                                     <Pane display="flex" float="left" flexDirection="column">
-                                        <Heading size={500}>Step.3</Heading>
+                                        <Heading size={500}>Step.3 - Get Sheets ID</Heading>
                                         <Text marginTop={10}>
-                                            Enter your spreadsheet key. 
-                                            From the URL of your spreadsheet, the key will be the present here "/spreadsheets/d/<Code>KEY</Code>/edit#gid=0"                                            
+                                            Enter your spreadsheet key.
+                                            From the URL of your spreadsheet, the key will be the present here "/spreadsheets/d/<Code>KEY</Code>/edit#gid=0"
                                         </Text>
                                         <Text>
                                             e.g.
@@ -177,23 +188,84 @@ const PageCreateGoogleSheets = ({ location }) => {
                                         </Text>
                                         <Pane display="flex" marginTop={10}>
                                             <TextInputField
-                                                label="Enter your Google sheets key"
-                                                placeholder="Google sheets key"
-                                                hint="This key will be used to fetch the data from google sheets"
-                                                value={googleSheetsKey}
+                                                label="Enter your Google sheets ID"
+                                                placeholder="Google sheets ID"
+                                                hint="This ID will be used to fetch the data from google sheets"
+                                                value={googleSheetID}
                                                 required
                                                 onChange={({ target: { value } }) => {
-                                                    setGoogleSheetsKey(value);
+                                                    setGoogleSheetID(value);
                                                 }}
                                             />
                                         </Pane>
                                     </Pane>
                                 </Pane>
                             </Pane>
-                            
+
                             <Pane display="flex" margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
                                 <Pane display="flex" float="left" flexDirection="column">
-                                    <Heading size={500}>Step.4</Heading>
+                                    <Heading size={500}>Step.4 - Service Account Creation</Heading>
+                                    <Text marginTop={10}>
+                                        <ol>
+                                            <li>Please make sure that proper project is selected and Sheets API is enabled as mentioned in <strong>Step-2</strong></li>
+                                            <li>Create a service account for your project</li>
+                                            <ul>
+                                                <li>In the sidebar on the left, select <Code>APIs &amp; Services > Credentials</Code></li>
+                                                <li>Click blue <Code>"+ CREATE CREDENITALS"</Code> and select <Code>"Service account"</Code> option</li>
+                                                <li>Enter name, description, click <Code>"CREATE"</Code></li>
+                                                <li>You can skip permissions, click <Code>"CONTINUE"</Code></li>
+                                                <li>Open the newly created Service Account</li>
+                                                <li>Click <Code>"+ ADD KEY"</Code> button and Select <Code>"Create New Key"</Code></li>
+                                                <li>Select the <Code>"JSON"</Code> key type option</li>
+                                                <li>Click <Code>"Create"</Code> button</li>
+                                                <li>Your JSON key file will be generated and downloaded to your machine (it is the only copy! so keep it safe)</li>
+                                                <li>click <Code>"DONE"</Code> and then click <Code>"SAVE"</Code></li>
+                                            </ul>
+                                            <li><strong>IMPORTANT: </strong>Open the JSON file and get values of <Code>client_email</Code> and <Code>private_key</Code> from the JSON file and enter below</li>
+                                        </ol>
+                                    </Text>
+                                    <TextInputField
+                                        label="Enter Client Email Propperty"
+                                        placeholder="client_email value"
+                                        hint="This property will be used to while saving data google sheets"
+                                        value={googleSheetClientEmail}
+                                        required
+                                        onChange={({ target: { value } }) => {
+                                            setGoogleSheetClientEmail(value);
+                                        }}
+                                    />
+                                    <TextareaField
+                                        id="textAreaPrivateKey"
+                                        label="Enter Private Key here"
+                                        placeholder="private_key value. Start with '-----BEGIN PRIVATE'"
+                                        hint="This property will be used to while saving data google sheets"
+                                        value={googleSheetPrivateKey}
+                                        required
+                                        onChange={({ target: { value } }) => {
+                                            setGoogleSheetPrivateKey(value);
+                                        }}
+                                    />
+                                </Pane>                                
+                            </Pane>
+
+                            <Pane display="flex" margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
+                                <Pane display="flex">
+                                    <Pane display="flex" float="left" flexDirection="column">
+                                        <Heading size={500}>Step.5 - Share Sheet to Service Account</Heading>
+                                        <Text marginTop={10}>
+                                            Share the sheet with your service account using the email noted above
+                                        </Text>
+                                        <Text>
+                                            e.g.
+                                            <img src="/images/google-sheets-share.png" width="100%" />
+                                        </Text>
+                                    </Pane>
+                                </Pane>
+                            </Pane>
+
+                            <Pane display="flex" margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
+                                <Pane display="flex" float="left" flexDirection="column">
+                                    <Heading size={500}>Step.6 - Other Page Details</Heading>
                                     <Pane display="flex">
                                         <TextInputField
                                             label="Enter Page Title"
@@ -217,7 +289,7 @@ const PageCreateGoogleSheets = ({ location }) => {
                                         />
                                     </Pane>
                                 </Pane>
-                                <Icon size={24} style={{ cursor: "hand" }} marginLeft={5} icon="help" title="Click to see more details" color="muted" onClick={() => setIsStep4HelpShown(true)} />
+                                <Icon size={24} style={{ cursor: "hand" }} marginLeft={5} icon="help" title="Click to see more details" color="muted" onClick={() => setIsStep6HelpShown(true)} />
                             </Pane>
 
                             <Pane marginLeft={10}>
@@ -238,7 +310,7 @@ const PageCreateGoogleSheets = ({ location }) => {
             >
                 <Pane display="flex" flexDirection='column' margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
                     <Heading>
-                        Clicking "Copy Template Sheet" button will open a new browser tab. 
+                        Clicking "Copy Template Sheet" button will open a new browser tab.
                         Switch to the newly opend tab and click on "Make a copy" button to copy the template sheet to your Google account.
                     </Heading>
                 </Pane>
@@ -246,34 +318,12 @@ const PageCreateGoogleSheets = ({ location }) => {
                     <img src="/images/copy-sheet-example.png" width="100%" />
                 </Pane>
             </Dialog>
-            <Dialog
-                isShown={isStep2HelpShown}
-                title="Step.2 - Help"
-                confirmLabel="Ok"
-                onCloseComplete={() => setIsStep2HelpShown(false)}
-            >
-                <Pane display="flex" flexDirection='column' margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
-                    <Heading>
-                        "Publish on web" option is located under File Menu.
-                    </Heading>
-                </Pane>
-                <Pane display="flex" flexDirection='column' margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
-                    <img src="/images/publish-on-web-option.png" width="100%" />
-                </Pane>
-                <Pane display="flex" flexDirection='column' margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
-                    <Heading>
-                        Then click "Publish" button to start publishing.
-                    </Heading>
-                </Pane>
-                <Pane display="flex" flexDirection='column' margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
-                    <img src="/images/publish-sheet-on-web.png" width="100%" />
-                </Pane>
-            </Dialog>            
+            
             <Dialog
                 isShown={isStep4HelpShown}
-                title="Step.4 - Help"
+                title="Step.6 - Help"
                 confirmLabel="Ok"
-                onCloseComplete={() => setIsStep4HelpShown(false)}
+                onCloseComplete={() => setIsStep6HelpShown(false)}
             >
                 <Pane display="flex" flexDirection='column' margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
                     <Heading>Page Title</Heading>
