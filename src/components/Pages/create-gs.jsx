@@ -20,9 +20,10 @@ const PageCreateGoogleSheets = ({ location }) => {
     const [processing, setProcessing] = React.useState(false);
 
     const [isStep1HelpShown, setIsStep1HelpShown] = React.useState(false);
-    const [isStep4HelpShown, setIsStep4HelpShown] = React.useState(false);
+    const [isStep2HelpShown, setIsStep2HelpShown] = React.useState(false);
     const [isStep5HelpShown, setIsStep5HelpShown] = React.useState(false);
     const [isStep6HelpShown, setIsStep6HelpShown] = React.useState(false);
+    const [isStep7HelpShown, setIsStep7HelpShown] = React.useState(false);
     const [selectedTemplate, setSelectedTemplate] = React.useState(template);
     const [title, setTitle] = React.useState();
     const [slug, setSlug] = React.useState("");
@@ -154,30 +155,43 @@ const PageCreateGoogleSheets = ({ location }) => {
                             </Pane>
                         </Pane>
 
+                        <Pane display="flex" margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
+                            <Pane display="flex" float="left" flexDirection="column">
+                                <Heading size={500}>Step.2 - Publish to web</Heading>
+                                <Text marginTop={10}>
+                                    <ol>
+                                        <li>Open the <Code>File</Code> menu and click <Code>Publish to web</Code></li>
+                                        <li>Towards the bottom select <Code>Start publishing</Code>.</li>
+                                    </ol>
+                                </Text>
+                            </Pane>
+                            <Icon size={24} style={{ cursor: "hand" }} marginLeft={5} icon="help" title="Click to see more details" color="muted" onClick={() => setIsStep2HelpShown(true)} />
+                        </Pane>
+
                         <Form noValidate validated={validated} onSubmit={handleSubmit}>
                             <Pane display="flex" margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
                                 <Pane display="flex" float="left" flexDirection="column">
-                                    <Heading size={500}>Step.2 - Enable the Sheets API</Heading>
+                                    <Heading size={500}>Step.3 - Enable the Sheets API</Heading>
                                     <Text marginTop={10}>
                                         <ol>
                                             <li>Go to the <a href="https://console.developers.google.com/" target="_blank">Google Developers Console</a></li>
                                             <li>Select your project or create a new one (and then select it)</li>
                                             <li>Enable the Sheets API for your project</li>
                                             <ul>
-                                                <li>In the sidebar on the left, select <Code>APIs &amp; Services > Library</Code></li>
+                                                <li>In the sidebar on the left, select <Code>APIs &amp; Services &gt; Library</Code></li>
                                                 <li>Search for "sheets"</li>
                                                 <li>Click on <Code>"Google Sheets API"</Code></li>
                                                 <li>click the blue <Code>"Enable"</Code> button</li>
                                             </ul>
                                         </ol>
                                     </Text>
-                                </Pane>                                
+                                </Pane>
                             </Pane>
 
                             <Pane display="flex" margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
                                 <Pane display="flex">
                                     <Pane display="flex" float="left" flexDirection="column">
-                                        <Heading size={500}>Step.3 - Get Sheets ID</Heading>
+                                        <Heading size={500}>Step.4 - Get Sheets ID</Heading>
                                         <Text marginTop={10}>
                                             Enter your spreadsheet key.
                                             From the URL of your spreadsheet, the key will be the present here "/spreadsheets/d/<Code>KEY</Code>/edit#gid=0"
@@ -204,13 +218,13 @@ const PageCreateGoogleSheets = ({ location }) => {
 
                             <Pane display="flex" margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
                                 <Pane display="flex" float="left" flexDirection="column">
-                                    <Heading size={500}>Step.4 - Service Account Creation</Heading>
+                                    <Heading size={500}>Step.5 - Service Account Creation</Heading>
                                     <Text marginTop={10}>
                                         <ol>
                                             <li>Please make sure that proper project is selected and Sheets API is enabled as mentioned in <strong>Step-2</strong></li>
                                             <li>Create a service account for your project</li>
                                             <ul>
-                                                <li>In the sidebar on the left, select <Code>APIs &amp; Services > Credentials</Code></li>
+                                                <li>In the sidebar on the left, select <Code>APIs &amp; Services &gt; Credentials</Code></li>
                                                 <li>Click blue <Code>"+ CREATE CREDENITALS"</Code> and select <Code>"Service account"</Code> option</li>
                                                 <li>Enter name, description, click <Code>"CREATE"</Code></li>
                                                 <li>You can skip permissions, click <Code>"CONTINUE"</Code></li>
@@ -245,13 +259,13 @@ const PageCreateGoogleSheets = ({ location }) => {
                                             setGoogleSheetPrivateKey(value);
                                         }}
                                     />
-                                </Pane>                                
+                                </Pane>
                             </Pane>
 
                             <Pane display="flex" margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
                                 <Pane display="flex">
                                     <Pane display="flex" float="left" flexDirection="column">
-                                        <Heading size={500}>Step.5 - Share Sheet to Service Account</Heading>
+                                        <Heading size={500}>Step.6 - Share Sheet to Service Account</Heading>
                                         <Text marginTop={10}>
                                             Share the sheet with your service account using the email noted above.
                                         </Text>
@@ -260,12 +274,12 @@ const PageCreateGoogleSheets = ({ location }) => {
                                         </Text>
                                     </Pane>
                                 </Pane>
-                                <Icon size={32} style={{ cursor: "hand" }} marginLeft={5} icon="help" title="Click to see more details" color="muted" onClick={() => setIsStep5HelpShown(true)} />
+                                <Icon size={32} style={{ cursor: "hand" }} marginLeft={5} icon="help" title="Click to see more details" color="muted" onClick={() => setIsStep6HelpShown(true)} />
                             </Pane>
 
                             <Pane display="flex" margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
                                 <Pane display="flex" float="left" flexDirection="column">
-                                    <Heading size={500}>Step.6 - Other Page Details</Heading>
+                                    <Heading size={500}>Step.7 - Other Page Details</Heading>
                                     <Pane display="flex">
                                         <TextInputField
                                             label="Enter Page Title"
@@ -289,7 +303,7 @@ const PageCreateGoogleSheets = ({ location }) => {
                                         />
                                     </Pane>
                                 </Pane>
-                                <Icon size={24} style={{ cursor: "hand" }} marginLeft={5} icon="help" title="Click to see more details" color="muted" onClick={() => setIsStep6HelpShown(true)} />
+                                <Icon size={24} style={{ cursor: "hand" }} marginLeft={5} icon="help" title="Click to see more details" color="muted" onClick={() => setIsStep7HelpShown(true)} />
                             </Pane>
 
                             <Pane marginLeft={10}>
@@ -318,12 +332,35 @@ const PageCreateGoogleSheets = ({ location }) => {
                     <img src="/images/copy-sheet-example.png" width="100%" />
                 </Pane>
             </Dialog>
+            <Dialog
+                isShown={isStep2HelpShown}
+                title="Step.2 - Help"
+                confirmLabel="Ok"
+                onCloseComplete={() => setIsStep2HelpShown(false)}
+            >
+                <Pane display="flex" flexDirection='column' margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
+                    <Heading>
+                        "Publish on web" option is located under File Menu.
+                    </Heading>
+                </Pane>
+                <Pane display="flex" flexDirection='column' margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
+                    <img src="/images/publish-on-web-option.png" width="100%" />
+                </Pane>
+                <Pane display="flex" flexDirection='column' margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
+                    <Heading>
+                        Then click "Publish" button to start publishing.
+                    </Heading>
+                </Pane>
+                <Pane display="flex" flexDirection='column' margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
+                    <img src="/images/publish-sheet-on-web.png" width="100%" />
+                </Pane>
+            </Dialog>
 
             <Dialog
-                isShown={isStep5HelpShown}
+                isShown={isStep6HelpShown}
                 title="Step.5 - Help"
                 confirmLabel="Ok"
-                onCloseComplete={() => setIsStep5HelpShown(false)}
+                onCloseComplete={() => setIsStep6HelpShown(false)}
             >
                 <Pane display="flex" flexDirection='column' margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
                     <Heading>
@@ -334,12 +371,12 @@ const PageCreateGoogleSheets = ({ location }) => {
                     <img src="/images/google-sheets-share.png" width="100%" />
                 </Pane>
             </Dialog>
-            
+
             <Dialog
-                isShown={isStep4HelpShown}
+                isShown={isStep7HelpShown}
                 title="Step.6 - Help"
                 confirmLabel="Ok"
-                onCloseComplete={() => setIsStep6HelpShown(false)}
+                onCloseComplete={() => setIsStep7HelpShown(false)}
             >
                 <Pane display="flex" flexDirection='column' margin={10} padding={10} background="tealTint" borderRadius={3} elevation={4}>
                     <Heading>Page Title</Heading>
