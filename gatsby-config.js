@@ -7,7 +7,7 @@ module.exports = {
     description: `Hyperlyst`
   },
   plugins: [
-    `gatsby-plugin-react-helmet`,    
+    `gatsby-plugin-react-helmet`,
     {
       resolve: `gatsby-plugin-prefetch-google-fonts`,
       options: {
@@ -45,6 +45,12 @@ module.exports = {
           performance: false
         }
       }
+    },
+    {
+      resolve: `gatsby-plugin-google-analytics`,
+      options: {
+        trackingId: process.env.GA_TRACKING_ID
+      },
     },
     `gatsby-plugin-styled-components`,
     `gatsby-plugin-netlify`
