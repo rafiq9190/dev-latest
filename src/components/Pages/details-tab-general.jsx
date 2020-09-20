@@ -87,6 +87,8 @@ const PageDetailsTabGeneral = ({ pageDetails }) => {
                 <Pane display="flex" float="left" flexDirection="column">
                     <Heading size={500}>Page Template Code</Heading>
                     <Text size={400} marginBottom={10}>{pageDetails && pageDetails.selectedTemplate}</Text>
+                    <Heading size={500}>Page Slug</Heading>
+                    <Text size={400} marginBottom={10}>{pageDetails && pageDetails.slug}</Text>
                     <Heading size={500}>Page Data Source is</Heading>
                     <Text size={400} marginBottom={10}><Code>{pageDetails && pageDetails.googleSheetID ? "Google Sheet" : "Airtable"}</Code></Text>
                     

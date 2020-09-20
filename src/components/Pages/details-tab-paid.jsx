@@ -24,6 +24,9 @@ const PageDetailsTabPaid = ({ pageDetails }) => {
     const [usermgmtState, setUsermgmtState] = React.useState(pageDetails && pageDetails.usermanagement);
     const [accessmgmtProcessing, setAccessmgmtProcessing] = React.useState(false);
     const [accessmgmtState, setAccessmgmtState] = React.useState(pageDetails && pageDetails.accessmanagement);
+    const [isRtlProcessing, setIsRtlProcessing] = React.useState(false);
+    const [isRtlState, setIsRtlState] = React.useState(pageDetails && pageDetails.isrtl);
+    
     const [commentsmgmtProcessing, setCommentsmgmtProcessing] = React.useState(false);
     const [commentsmgmtState, setCommentsmgmtState] = React.useState(pageDetails && pageDetails.commentsmanagement);
 
@@ -206,6 +209,32 @@ const PageDetailsTabPaid = ({ pageDetails }) => {
             .then(() => { setTimeout(function () { navigate(`/dashboard/`, { replace: true }) }, 5000); })
     };
 
+    const changeIsRtl = (slug, newstate) => {
+        console.log("********** " + slug + ", " + newstate)
+        toaster.closeAll()
+        setIsRtlProcessing(true)
+        //Free plan restriction
+        if (plan == "free") {
+            toaster.danger(
+                "Feature to enable RTL for a site is NOT available on FREE plan. Please upgrade to use this feature", {
+                id: 'forbidden-action'
+            }
+            )
+            setIsRtlProcessing(false);
+            return;
+        }
+
+        firebase
+            .database()
+            .ref()
+            .child(`users/${user.uid}/projects/${slug}/isrtl`)
+            .set(newstate)
+            .then(() => { refreshUserExtras(user); })
+            .then(() => { setIsRtlProcessing(false) })
+            .then(() => { toaster.success('RTL(Right-To-Left) feature ' + (newstate ? 'activated' : 'deactivated') + ' successfully. You will be redirected to Dashboard in 5 seconds') })
+            .then(() => { setTimeout(function () { navigate(`/dashboard/`, { replace: true }) }, 5000); })
+    };
+
     const updateTrackingInfo = (event) => {
         const form = event.currentTarget;
         event.preventDefault();
@@ -290,6 +319,18 @@ const PageDetailsTabPaid = ({ pageDetails }) => {
                                 />
                                 <Heading margin={8} size={500}>{`  `}Comments</Heading>
                                 {commentsmgmtProcessing && <Pane marginTop={5}><Loader type="Bars" color="#3d8bd4" height={16} width={24} /></Pane>}
+                            </Pane>
+                        </Pane>
+                    </Pane>
+                    <Pane display="flex" padding={10} background="tint2" borderRadius={3} elevation={4}>
+                        <Pane display="flex" float="left" flexDirection="column">
+                            <Pane display="flex">
+                                <Switch margin={10}
+                                    checked={isRtlState}
+                                    onChange={e => { setIsRtlState(e.target.checked); changeIsRtl(pageDetails.slug, !pageDetails.isrtl) }}
+                                />
+                                <Heading margin={8} size={500}>{`  `}Is Site RTL? (Right-to-Left)</Heading>
+                                {isRtlProcessing && <Pane marginTop={5}><Loader type="Bars" color="#3d8bd4" height={16} width={24} /></Pane>}
                             </Pane>
                         </Pane>
                     </Pane>
