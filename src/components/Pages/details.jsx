@@ -28,7 +28,7 @@ const PageDetails = ({ location }) => {
                     <Button height={20} marginBottom={10} iconBefore="arrow-left" appearance="minimal" onClick={() => navigate("/dashboard/")}>
                         Back to Dashboard
                     </Button>
-                    <h5 className="mb-2">Manage all settings here</h5>
+                    <h5 className="mb-2">Manage all settings here for <span style={{fontSize: "small"}}>&quot;{pageDetails.title} ({pageDetails.slug})&quot;</span></h5>
                     <Tabs className="nav-fill px-2"
                         id="page-settings"
                         onSelect={(k) => console.log("**** Selected tab = " + k)}

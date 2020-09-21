@@ -4,8 +4,10 @@ import { navigate } from "gatsby"
 import { getUser, getUserExtras, getUserType } from "../../utils/auth"
 import { refreshUserExtras } from "../../utils/firebaseHelpers"
 import firebase from "gatsby-plugin-firebase"
+import { Helmet } from 'react-helmet';
 import { Alert, IconButton, toaster, Pane, Heading, Text, TextInputField, FilePicker, Button, Switch } from "evergreen-ui"
 import Loader from 'react-loader-spinner'
+import { CloudinaryContext } from "cloudinary-react";
 import { openUploadWidget } from "../../utils/cloudinaryService"
 
 
@@ -91,85 +93,90 @@ const PageDetailsTabSettings = ({ pageDetails }) => {
     };
 
     return (
-        <Pane margin={10}>
-            <Heading size={600} marginBottom={10}>Manage site settings here</Heading>
-            <Button height={24} iconBefore="floppy-disk" appearance="primary" onClick={() => { saveSettings(pageDetails.slug) }}>
-                Save Changes
+        <CloudinaryContext cloudName={cloudinaryAccountName}>
+            <Helmet>
+                <script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript" />
+            </Helmet>
+            <Pane margin={10}>
+                <Heading size={600} marginBottom={10}>Manage site settings here</Heading>
+                <Button height={24} iconBefore="floppy-disk" appearance="primary" onClick={() => { saveSettings(pageDetails.slug) }}>
+                    Save Changes
                 {settingsProcessing && <Loader type="Bars" color="#FFF" height={16} width={24} />}
-            </Button>
-            <Pane padding={20} marginTop={10} background="tint2" borderRadius={3} elevation={4}>
-                <TextInputField
-                    label="Site Title"
-                    placeholder="Enter title for the site"
-                    value={settingsSiteTitle}
-                    onChange={e => setSettingsSiteTitle(e.target.value)}
-                    hint=""
-                />
-                <TextInputField
-                    label="Site Subtitle"
-                    placeholder="Enter subtitle of the site"
-                    value={settingsSiteSubTitle}
-                    onChange={e => setSettingsSiteSubTitle(e.target.value)}
-                    hint=""
-                />
-                <TextInputField
-                    label="Primary color"
-                    placeholder="Enter primary color of the site"
-                    value={settingsPrimaryColor}
-                    onChange={e => setSettingsPrimaryColor(e.target.value)}
-                    hint="eg. #3b4e5c"
-                />
-                <TextInputField
-                    label="Fonts"
-                    placeholder="Enter font family"
-                    value={settingsFonts}
-                    onChange={e => setSettingsFonts(e.target.value)}
-                    hint=""
-                />
-                <TextInputField
-                    label="Meta Description"
-                    placeholder="Enter meta description of the site"
-                    value={settingsMetaDescription}
-                    onChange={e => setSettingsMetaDescription(e.target.value)}
-                    hint="For SEO"
-                />
-                <TextInputField
-                    label="Meta Keywords"
-                    placeholder="Enter meta keywords of the site"
-                    value={settingsMetaKeywords}
-                    onChange={e => setSettingsMetaKeywords(e.target.value)}
-                    hint="For SEO"
-                />
-                <Pane marginBottom={20}>
-                    <Heading size={400} marginBottom={5}>Logo Image</Heading>
-                    <Button height={24} marginRight={15} iconBefore="camera" onClick={() => beginImageUpload("logoImage")}>
-                        Select logo image
+                </Button>
+                <Pane padding={20} marginTop={10} background="tint2" borderRadius={3} elevation={4}>
+                    <TextInputField
+                        label="Site Title"
+                        placeholder="Enter title for the site"
+                        value={settingsSiteTitle}
+                        onChange={e => setSettingsSiteTitle(e.target.value)}
+                        hint=""
+                    />
+                    <TextInputField
+                        label="Site Subtitle"
+                        placeholder="Enter subtitle of the site"
+                        value={settingsSiteSubTitle}
+                        onChange={e => setSettingsSiteSubTitle(e.target.value)}
+                        hint=""
+                    />
+                    <TextInputField
+                        label="Primary color"
+                        placeholder="Enter primary color of the site"
+                        value={settingsPrimaryColor}
+                        onChange={e => setSettingsPrimaryColor(e.target.value)}
+                        hint="eg. #3b4e5c"
+                    />
+                    <TextInputField
+                        label="Fonts"
+                        placeholder="Enter font family"
+                        value={settingsFonts}
+                        onChange={e => setSettingsFonts(e.target.value)}
+                        hint=""
+                    />
+                    <TextInputField
+                        label="Meta Description"
+                        placeholder="Enter meta description of the site"
+                        value={settingsMetaDescription}
+                        onChange={e => setSettingsMetaDescription(e.target.value)}
+                        hint="For SEO"
+                    />
+                    <TextInputField
+                        label="Meta Keywords"
+                        placeholder="Enter meta keywords of the site"
+                        value={settingsMetaKeywords}
+                        onChange={e => setSettingsMetaKeywords(e.target.value)}
+                        hint="For SEO"
+                    />
+                    <Pane marginBottom={20}>
+                        <Heading size={400} marginBottom={5}>Logo Image</Heading>
+                        <Button height={24} marginRight={15} iconBefore="camera" onClick={() => beginImageUpload("logoImage")}>
+                            Select logo image
                                             </Button>
-                    <img src={settingsLogoImageThumbnail} />
-                </Pane>
-                <TextInputField
-                    label="Hero Title"
-                    placeholder="Enter title of the hero section"
-                    value={settingsHeroTitle}
-                    onChange={e => setSettingsHeroTitle(e.target.value)}
-                    hint=""
-                />
-                <TextInputField
-                    label="Hero Description"
-                    placeholder="Enter description of the hero section"
-                    value={settingsHeroDescription}
-                    onChange={e => setSettingsHeroDescription(e.target.value)}
-                    hint=""
-                />
-                <Pane marginBottom={20}>
-                    <Heading size={400} marginBottom={5}>Hero Image</Heading>
-                    <Button height={24} marginRight={15} iconBefore="camera" onClick={() => beginImageUpload("heroImage")}>
-                        Select hero image
+                        <img src={settingsLogoImageThumbnail} />
+                    </Pane>
+                    <TextInputField
+                        label="Hero Title"
+                        placeholder="Enter title of the hero section"
+                        value={settingsHeroTitle}
+                        onChange={e => setSettingsHeroTitle(e.target.value)}
+                        hint=""
+                    />
+                    <TextInputField
+                        label="Hero Description"
+                        placeholder="Enter description of the hero section"
+                        value={settingsHeroDescription}
+                        onChange={e => setSettingsHeroDescription(e.target.value)}
+                        hint=""
+                    />
+                    <Pane marginBottom={20}>
+                        <Heading size={400} marginBottom={5}>Hero Image</Heading>
+                        <Button height={24} marginRight={15} iconBefore="camera" onClick={() => beginImageUpload("heroImage")}>
+                            Select hero image
                                             </Button>
-                    <img src={settingsHeroImageThumbnail} />
+                        <img src={settingsHeroImageThumbnail} />
+                    </Pane>
                 </Pane>
             </Pane>
-        </Pane>
+        </CloudinaryContext>
     )
 }
 
