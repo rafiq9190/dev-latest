@@ -56,6 +56,7 @@ const PageDetailsTabLabels = ({ pageDetails }) => {
     const [lblSubmit, setLblSubmit] = React.useState(labelsData.lblSubmit || 'Submit Record');
     const [errorMsgCreateForm, setErrorMsgCreateForm] = React.useState(labelsData.errorMsgCreateForm || 'Error while submitting the record');
     const [successMsgCreateForm, setSuccessMsgCreateForm] = React.useState(labelsData.successMsgCreateForm || 'Record submitted successfully');
+    const [lblPoweredBy, setLblPoweredBy] = React.useState(labelsData.lblPoweredBy || 'Powered By');
 
     const saveLabels = (slug) => {
         toaster.closeAll()
@@ -104,6 +105,7 @@ const PageDetailsTabLabels = ({ pageDetails }) => {
             lblSubmit,
             errorMsgCreateForm,
             successMsgCreateForm,
+            lblPoweredBy,
         }
 
         firebase
@@ -167,6 +169,7 @@ const PageDetailsTabLabels = ({ pageDetails }) => {
                 <TextInputField label='lblSubmit' placeholder='Enter value for lblSubmit' value={lblSubmit} onChange={e => setLblSubmit(e.target.value)} hint='Text of submit button on Create form' />
                 <TextInputField label='errorMsgCreateForm' placeholder='Enter value for errorMsgCreateForm' value={errorMsgCreateForm} onChange={e => setErrorMsgCreateForm(e.target.value)} hint='Error message while submitting a new record' />
                 <TextInputField label='successMsgCreateForm' placeholder='Enter value for successMsgCreateForm' value={successMsgCreateForm} onChange={e => setSuccessMsgCreateForm(e.target.value)} hint='Message after successfully submitting a record' />
+                <TextInputField label='lblPoweredBy' placeholder='Enter value for Powered By text' value={lblPoweredBy} onChange={e => setLblPoweredBy(e.target.value)} hint='Powered By text in the footer' />
             </Pane>
         </Pane>
     )
