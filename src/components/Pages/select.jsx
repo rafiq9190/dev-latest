@@ -26,6 +26,8 @@ const TemplateSelect = ({ location }) => {
         }
     }, [loading, templates])
 
+    console.log("+++++ templates", templates)
+
     return (
         <>
             {loading &&
@@ -52,18 +54,20 @@ const TemplateSelect = ({ location }) => {
                                                 Demo
                                         </Button>
                                         </ListGroup.Item>
-                                        <ListGroup.Item>
-                                            <Card.Text className="m-0">
-                                                <img src="/images/googlesheets-logo.png" height="32px" />
-                                            </Card.Text>
-                                            <Button height={32} marginTop={10} marginRight={16} iconBefore="applications" appearance="primary" intent="success" onClick={() => navigate("/dashboard/page/create-googlesheets", { state: { template: item } })}>
-                                                Select
-                                        </Button>
-                                            <Button height={32} marginTop={10} iconAfter="share" onClick={() => { window.open(item.demoURL_GS, '_blank') }}>
-                                                Demo
-                                        </Button>
-                                        </ListGroup.Item>
-                                    </ListGroup>                                    
+                                        {item.googleSheetsTemplateCopy &&
+                                            <ListGroup.Item>
+                                                <Card.Text className="m-0">
+                                                    <img src="/images/googlesheets-logo.png" height="32px" />
+                                                </Card.Text>
+                                                <Button height={32} marginTop={10} marginRight={16} iconBefore="applications" appearance="primary" intent="success" onClick={() => navigate("/dashboard/page/create-googlesheets", { state: { template: item } })}>
+                                                    Select
+                                                </Button>
+                                                <Button height={32} marginTop={10} iconAfter="share" onClick={() => { window.open(item.demoURL_GS, '_blank') }}>
+                                                    Demo
+                                                </Button>
+                                            </ListGroup.Item>
+                                        }
+                                    </ListGroup>
                                 </Card.Body>
                             </Card>
                         </div>
