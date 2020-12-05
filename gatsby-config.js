@@ -9,13 +9,10 @@ module.exports = {
   plugins: [
     `gatsby-plugin-react-helmet`,
     {
-      resolve: `gatsby-plugin-prefetch-google-fonts`,
+      resolve: `gatsby-plugin-google-fonts`,
       options: {
         fonts: [
-          {
-            family: `Spectral`,
-            variants: [`500`]
-          },
+          `Spectral:500`
         ],
       },
     },
