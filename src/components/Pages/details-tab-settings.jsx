@@ -23,6 +23,7 @@ const PageDetailsTabSettings = ({ pageDetails }) => {
     const [settingsProcessing, setSettingsProcessing] = React.useState(false);
     const [settingsSiteTitle, setSettingsSiteTitle] = React.useState(settingsData.settingsSiteTitle || "");
     const [settingsSiteSubTitle, setSettingsSiteSubTitle] = React.useState(settingsData.settingsSiteSubTitle || "");
+    const [settingsExternalURL, setSettingsExternalURL] = React.useState(settingsData.settingsExternalURL || "");
     const [settingsPrimaryColor, setSettingsPrimaryColor] = React.useState(settingsData.settingsPrimaryColor || "");
     const [settingsFonts, setSettingsFonts] = React.useState(settingsData.settingsFonts || "");
     const [settingsMetaDescription, setSettingsMetaDescription] = React.useState(settingsData.settingsMetaDescription || "");
@@ -69,6 +70,7 @@ const PageDetailsTabSettings = ({ pageDetails }) => {
         const settingsData = {
             settingsSiteTitle,
             settingsSiteSubTitle,
+            settingsExternalURL,
             settingsPrimaryColor,
             settingsFonts,
             settingsMetaDescription,
@@ -117,6 +119,13 @@ const PageDetailsTabSettings = ({ pageDetails }) => {
                         value={settingsSiteSubTitle}
                         onChange={e => setSettingsSiteSubTitle(e.target.value)}
                         hint=""
+                    />
+                    <TextInputField
+                        label="External URL"
+                        placeholder="Enter the External URL"
+                        value={settingsExternalURL}
+                        onChange={e => setSettingsExternalURL(e.target.value)}
+                        hint="The settings will help if the site points to any External URL (if required)"
                     />
                     <TextInputField
                         label="Primary color"
