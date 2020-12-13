@@ -93,7 +93,7 @@ const PageDetailsTabSettings = ({ pageDetails }) => {
             .then(() => { toaster.success('Settings Saved Successfully. You will be redirected to Dashboard in 5 seconds') })
             .then(() => { setTimeout(function () { navigate(`/dashboard/`, { replace: true }) }, 5000); })
     };
-
+    
     return (
         <CloudinaryContext cloudName={cloudinaryAccountName}>
             <Helmet>
@@ -176,13 +176,15 @@ const PageDetailsTabSettings = ({ pageDetails }) => {
                         onChange={e => setSettingsHeroDescription(e.target.value)}
                         hint=""
                     />
-                    <Pane marginBottom={20}>
-                        <Heading size={400} marginBottom={5}>Hero Image</Heading>
-                        <Button height={24} marginRight={15} iconBefore="camera" onClick={() => beginImageUpload("heroImage")}>
-                            Select hero image
-                                            </Button>
-                        <img src={settingsHeroImageThumbnail} />
-                    </Pane>
+                    {pageDetails.selectedTemplate != "template_005_intercom" &&
+                        <Pane marginBottom={20}>
+                            <Heading size={400} marginBottom={5}>Hero Image</Heading>
+                            <Button height={24} marginRight={15} iconBefore="camera" onClick={() => beginImageUpload("heroImage")}>
+                                Select hero image
+                        </Button>
+                            <img src={settingsHeroImageThumbnail} />
+                        </Pane>
+                    }
                 </Pane>
             </Pane>
         </CloudinaryContext>

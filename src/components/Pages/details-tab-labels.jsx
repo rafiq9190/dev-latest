@@ -169,7 +169,7 @@ const PageDetailsTabLabels = ({ pageDetails }) => {
                 <TextInputField label='lblSubmit' placeholder='Enter value for lblSubmit' value={lblSubmit} onChange={e => setLblSubmit(e.target.value)} hint='Text of submit button on Create form' />
                 <TextInputField label='errorMsgCreateForm' placeholder='Enter value for errorMsgCreateForm' value={errorMsgCreateForm} onChange={e => setErrorMsgCreateForm(e.target.value)} hint='Error message while submitting a new record' />
                 <TextInputField label='successMsgCreateForm' placeholder='Enter value for successMsgCreateForm' value={successMsgCreateForm} onChange={e => setSuccessMsgCreateForm(e.target.value)} hint='Message after successfully submitting a record' />
-                <TextInputField label='lblPoweredBy' placeholder='Enter value for Powered By text' value={lblPoweredBy} onChange={e => setLblPoweredBy(e.target.value)} hint='Powered By text in the footer' />
+                {/* <TextInputField label='lblPoweredBy' placeholder='Enter value for Powered By text' value={lblPoweredBy} onChange={e => setLblPoweredBy(e.target.value)} hint='Powered By text in the footer' /> */}
             </Pane>
         </Pane>
     )

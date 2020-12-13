@@ -292,7 +292,7 @@ const PageDetailsTabPaid = ({ pageDetails }) => {
     return (
         <>
             <Heading size={600} margin={10}>Manage different paid features here</Heading>
-            {plan && plan != "free" &&
+            {plan && plan != "free" && pageDetails.selectedTemplate != "template_005_intercom" &&
                 <Pane marginTop={20} marginLeft={10}>
                     <Pane display="flex" padding={10} background="tint2" borderRadius={3} elevation={4}>
                         <Pane display="flex" float="left" flexDirection="column">
