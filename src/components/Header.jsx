@@ -15,7 +15,10 @@ const Header = ({ location }) => {
         <header className="mainHeader">
             <div className="container">
                 <Navbar expand="sm">
-                    <Navbar.Brand href="/dashboard/"><img src="/images/logo.png" /></Navbar.Brand>
+                    <Navbar.Brand href="/dashboard/">
+                        <span style={{color: "#525df9", fontWeight: "600"}}>Hyperlyst</span>
+                        {/* <img src="/images/logo.png" /> */}
+                    </Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav as="ul">
