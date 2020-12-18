@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { Link } from "gatsby"
-import { getUser, isLoggedIn, logout } from "../utils/auth"
+import { getUser, isLoggedIn, logout, getUserType } from "../utils/auth"
 import { Navbar, Nav } from 'react-bootstrap';
 
 
@@ -10,6 +10,8 @@ const Header = ({ location }) => {
     if (isLoggedIn()) {
         loggedInUser = getUser();
     }
+
+    const plan = getUserType();
 
     return (
         <header className="mainHeader">
@@ -28,6 +30,9 @@ const Header = ({ location }) => {
                                         <Link to="/dashboard/" className={`nav-link ${location.pathname === '/dashboard/' ? 'active' : ''}`}>Pages</Link>
                                     </Nav.Item>
                                     <Nav.Item as="li">
+                                        <a href="https://www.hyperlyst.com/pricing" className={`nav-link`} target="_blank">Pricing</a>
+                                    </Nav.Item>
+                                    <Nav.Item as="li">
                                         <Link to="/dashboard/activate" className={`nav-link ${location.pathname === '/dashboard/activate' ? 'active' : ''}`}>Activation</Link>
                                     </Nav.Item>
                                     <Nav.Item as="li">
@@ -42,7 +47,8 @@ const Header = ({ location }) => {
                     </Navbar.Collapse>
                     <div className="head_right">
                         <ul className="right_bar">
-                            <li><a href="javascript:void(0)">HELP <span>?</span></a></li>
+                            <li><a>Current plan is : </a>{plan}</li>
+                            {/* <li><a href="javascript:void(0)">HELP <span>?</span></a></li> */}
                             <li><a href="javascript:void(0)"><i className="fa fa-bell"></i></a></li>
                             {isLoggedIn() &&
                                 <li><a href="/dashboard/profile" className="user" title={loggedInUser && (loggedInUser.displayname || loggedInUser.email)}><i className="fa fa-user"></i></a></li>
