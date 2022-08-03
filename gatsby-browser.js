@@ -1,7 +1,5 @@
-import "./src/theme/bootstrap.min.css"
-import "./src/theme/admin.dashboard.styles.css"
-import "firebase/auth"
-import "firebase/firestore"
-import "firebase/database"
-import "firebase/functions"
-import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
+import 'firebase/auth';
+import 'firebase/firestore';
+import 'firebase/functions';
+import './src/components/style/layout.css';
+import 'bootstrap/dist/css/bootstrap.min.css';

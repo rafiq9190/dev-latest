@@ -1,55 +1,44 @@
-require("dotenv").config({
-  path: `.env.${process.env.NODE_ENV}`,
-})
 module.exports = {
   siteMetadata: {
-    title: `Hyperlyst`,
-    description: `Hyperlyst`
+    title: `Gatsby Default Starter`,
+    description: `Kick off your next, great Gatsby project with this default starter. This barebones starter ships with the main Gatsby configuration files you might need.`,
+    author: `@gatsbyjs`,
+    siteUrl: `https://gatsbystarterdefaultsource.gatsbyjs.io/`,
   },
   plugins: [
     `gatsby-plugin-react-helmet`,
+    `gatsby-plugin-image`,
     {
-      resolve: `gatsby-plugin-google-fonts`,
+      resolve: `gatsby-source-filesystem`,
       options: {
-        fonts: [
-          `Spectral:500`
-        ],
+        name: `images`,
+        path: `${__dirname}/src/images`,
+      },
+    },
+    {
+      resolve: 'gatsby-plugin-firebase',
+      options: {
+        credentials: {
+          apiKey: 'AIzaSyD22NEbGm4Z6eFug-aFiXOlD3ZISDNHVV8',
+          authDomain: 'hyper-4fa6c.firebaseapp.com',
+          databaseURL: 'https://hyper-4fa6c.firebaseio.com',
+          projectId: 'hyper-4fa6c',
+          storageBucket: 'hyper-4fa6c.appspot.com',
+          messagingSenderId: '846964182879',
+          appId: '1:846964182879:web:8e9f9c4e35b3d9498930ea',
+          measurementId: 'G-GLPBTT5VNX',
+        },
       },
     },
     {
       resolve: `gatsby-plugin-create-client-paths`,
-      options: { prefixes: [`/dashboard/*`] }
+      options: { prefixes: [`/dashboard/*`] },
     },
-    {
-      resolve: "gatsby-plugin-firebase",
-      options: {
-        credentials: {
-          apiKey: process.env.GATSBY_FIREBASE_API_KEY,
-          authDomain: process.env.GATSBY_FIREBASE_AUTH_DOMAIN,
-          databaseURL: process.env.GATSBY_FIREBASE_DATABASE_URL,
-          projectId: process.env.GATSBY_FIREBASE_PROJECT_ID,
-          storageBucket: process.env.GATSBY_FIREBASE_STORAGE_BUCKET,
-          messagingSenderId: process.env.GATSBY_FIREBASE_MESSAGING_SENDER_ID,
-          appId: process.env.GATSBY_FIREBASE_APP_ID,
-        },
-        features: {
-          auth: true,
-          database: true,
-          firestore: true,
-          storage: false,
-          messaging: false,
-          functions: false,
-          performance: false
-        }
-      }
-    },
-    {
-      resolve: `gatsby-plugin-google-analytics`,
-      options: {
-        trackingId: process.env.GA_TRACKING_ID
-      },
-    },
-    `gatsby-plugin-styled-components`,
-    `gatsby-plugin-netlify`
-  ]
-}
+    `gatsby-transformer-sharp`,
+    `gatsby-plugin-sharp`,
+
+    // this (optional) plugin enables Progressive Web App + Offline functionality
+    // To learn more, visit: https://gatsby.dev/offline
+    // `gatsby-plugin-offline`,
+  ],
+};

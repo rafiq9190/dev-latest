@@ -1,14 +1,17 @@
+import firebase from 'gatsby-plugin-firebase';
+
 import React, { useState } from 'react';
 import { navigate } from '@reach/router';
-import firebase from 'gatsby-plugin-firebase';
 import { Link } from 'gatsby';
-import Toasty from './Toast';
-import { setUser, setUserExtras, isLoggedIn } from '../utils/auth';
-
+import { setUser, isLoggedIn, setUserExtras } from '../utils/auth';
 import GoogleImage from '../images/google.jpg';
 import { Form } from 'react-bootstrap';
+import Toasty from './Toast';
 
-const Login = () => {
+function Signup() {
+  const auth = firebase.auth();
+
+  const googleProvider = new firebase.auth.GoogleAuthProvider();
   const [isProcessing, setProcessing] = useState(false);
 
   if (isLoggedIn()) {
@@ -20,17 +23,19 @@ const Login = () => {
     email: '',
     password: '',
   });
+
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
-  const handleLogin = async (e) => {
+
+  const handleRegister = async (e) => {
     e.preventDefault();
 
     setProcessing(true);
     try {
       const result = await firebase
         .auth()
-        .signInWithEmailAndPassword(data.email, data.password);
+        .createUserWithEmailAndPassword(data.email, data.password);
       firebase
         .database()
         .ref('users/' + result.user.uid)
@@ -44,10 +49,7 @@ const Login = () => {
 
     setProcessing(false);
   };
-
   const signInWithGoogle = () => {
-    const auth = firebase.auth();
-    const googleProvider = new firebase.auth.GoogleAuthProvider();
     auth
       .signInWithPopup(googleProvider)
       .then((res) => {
@@ -58,55 +60,31 @@ const Login = () => {
         <Toasty data={error.message} />;
       });
   };
-
-  // function getUiConfig(auth) {
-  //   return {
-  //     signInFlow: 'popup',
-  //     signInOptions: [
-  //       auth.GoogleAuthProvider.PROVIDER_ID,
-  //       auth.EmailAuthProvider.PROVIDER_ID,
-  //     ],
-  //     // signInSuccessUrl: '/',
-  //     callbacks: {
-  //       signInSuccessWithAuthResult: (result) => {
-
-  //         firebase
-  //           .database()
-  //           .ref('users/' + result.user.uid)
-  //           .once('value', (snap) => {
-  //             setUserExtras(snap.val() || {});
-  //           });
-  //         setUser(result.user);
-  //         navigate('/');
-  //       },
-  //     },
-  //   };
-  // }
-
   return (
     <div className="container">
       <div className="row">
         <div className="col-md-6 offset-md-3">
-          <div className="google-auth">
-            <div>
-              <img
-                src={GoogleImage}
-                alt="A google"
-                width={20}
-                height={20}
-              />
-            </div>
-
-            <span
-              style={{ marginLeft: '1rem' }}
-              onClick={signInWithGoogle}
-            >
-              Sign in with Google
-            </span>
-          </div>
-          <p className="text-center m-1">or</p>
+          <p
+            style={{
+              fontSize: '32px',
+              color: '#5a5d63',
+              textAlign: 'center',
+              padding: '1rem',
+            }}
+          >
+            Sign up for free and start building in minutes
+          </p>
 
           <Form>
+            <Form.Control
+              type="text"
+              placeholder="Full Name"
+              className="bg-light"
+              name="name"
+              value={data.name}
+              onChange={handleChange}
+            />
+            <br />
             <Form.Control
               type="text"
               placeholder="Email"
@@ -125,40 +103,58 @@ const Login = () => {
               onChange={handleChange}
             />
             <br />
-
+            <div className="d-flex">
+              <Form.Check type="checkbox" id="" label={``} />
+              <span>
+                I accept the{' '}
+                <Link
+                  to=""
+                  style={{ color: '#6F87D5', cursor: 'pointer' }}
+                >
+                  terms and conditions
+                </Link>
+              </span>
+            </div>
             <br></br>
             <div
               className="d-grid gap-2 text-center form-btn"
-              onClick={handleLogin}
+              onClick={handleRegister}
               disabled={isProcessing}
             >
               {!isProcessing ? (
-                ' Sign in'
+                ' Sign up for free'
               ) : (
                 <div className="spinner-grow spinner-grow-sm"></div>
               )}
             </div>
           </Form>
 
+          <p style={{ textAlign: 'center', margin: '10px' }}>or</p>
+          <div className="google-auth">
+            <div>
+              <img
+                src={GoogleImage}
+                alt="A google"
+                width={20}
+                height={20}
+              />
+            </div>
+            <span
+              style={{ marginLeft: '1rem' }}
+              onClick={signInWithGoogle}
+            >
+              Sign up with Google
+            </span>
+          </div>
           <br></br>
-          <p
-            style={{
-              textAlign: 'center',
-              margin: '1rem',
-              color: '#6F87D5',
-              cursor: 'pointer',
-            }}
-          >
-            <Link>Forget password?</Link>
-          </p>
           <p className="text-center">
-            Haven’t got an account?{' '}
+            Already have an account?{' '}
             <span>
               <Link
                 style={{ color: '#6F87D5' }}
-                to="/dashboard/signup"
+                to="/dashboard/login"
               >
-                Sign Up
+                Login
               </Link>
             </span>
           </p>
@@ -166,6 +162,6 @@ const Login = () => {
       </div>
     </div>
   );
-};
+}
 
-export default Login;
+export default Signup;
