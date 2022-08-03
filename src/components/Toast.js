@@ -1,6 +1,7 @@
 import React from 'react';
 import Toast from 'react-bootstrap/Toast';
-function Toasty() {
+function Toasty({ data }) {
+  console.log('🚀 ~ file: Toast.js ~ line 4 ~ Toasty ~ data', data);
   return (
     <Toast>
       <Toast.Header>
@@ -9,10 +10,10 @@ function Toasty() {
           className="rounded me-2"
           alt=""
         />
-        <strong className="me-auto">Bootstrap</strong>
+        <strong className="me-auto"></strong>
         <small>11 mins ago</small>
       </Toast.Header>
-      <Toast.Body>Hello, world! This is a toast message.</Toast.Body>
+      <Toast.Body>{data}</Toast.Body>
     </Toast>
   );
 }

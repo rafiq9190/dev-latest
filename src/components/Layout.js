@@ -3,6 +3,10 @@ import Header from './Header';
 import { Helmet } from 'react-helmet';
 
 const Layout = ({ location, title, children }) => {
+  console.log(
+    '🚀 ~ file: Layout.js ~ line 6 ~ Layout ~ location',
+    location,
+  );
   const [isOpen, setIsOpen] = useState(false);
 
   return (

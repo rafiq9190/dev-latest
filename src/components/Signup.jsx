@@ -10,6 +10,7 @@ import Toasty from './Toast';
 
 function Signup() {
   const auth = firebase.auth();
+  const [user, setUser] = useState('');
 
   const googleProvider = new firebase.auth.GoogleAuthProvider();
   const [isProcessing, setProcessing] = useState(false);
@@ -36,13 +37,16 @@ function Signup() {
       const result = await firebase
         .auth()
         .createUserWithEmailAndPassword(data.email, data.password);
+
+      setUser(result.user);
+
+      navigate('/dashboard');
       firebase
         .database()
         .ref('users/' + result.user.uid)
         .once('value', (snap) => {
           setUserExtras(snap.val() || {});
         });
-      setUser(result.user);
     } catch (err) {
       <Toasty data={err.message} />;
     }
@@ -54,7 +58,7 @@ function Signup() {
       .signInWithPopup(googleProvider)
       .then((res) => {
         setUser(res.user);
-        navigate('/');
+        navigate('/dashboard');
       })
       .catch((error) => {
         <Toasty data={error.message} />;

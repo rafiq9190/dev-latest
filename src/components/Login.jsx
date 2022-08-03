@@ -38,6 +38,7 @@ const Login = () => {
           setUserExtras(snap.val() || {});
         });
       setUser(result.user);
+      navigate('/dashboard');
     } catch (err) {
       <Toasty data={err.message} />;
     }
@@ -52,7 +53,7 @@ const Login = () => {
       .signInWithPopup(googleProvider)
       .then((res) => {
         setUser(res.user);
-        navigate('/');
+        navigate('/dashboard');
       })
       .catch((error) => {
         <Toasty data={error.message} />;
@@ -86,7 +87,10 @@ const Login = () => {
   return (
     <div className="container">
       <div className="row">
-        <div className="col-md-6 offset-md-3">
+        <div
+          className="col-md-6 offset-md-3 my-3"
+          style={{ marginTop: '134px' }}
+        >
           <div className="google-auth">
             <div>
               <img

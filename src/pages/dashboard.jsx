@@ -8,6 +8,7 @@ import Logout from '../components/Logout';
 import PrivateRoute from '../components/PrivateRoute';
 import { isBrowser } from '../utils/auth';
 import Signup from '../components/Signup';
+import Billing from '../components/Billing';
 
 const Dashboard = ({ location }) => {
   return (
@@ -15,8 +16,11 @@ const Dashboard = ({ location }) => {
       {isBrowser() && (
         <Router>
           <PrivateRoute path="/dashboard/" component={Pages} />
+          <PrivateRoute
+            path="/dashboard/billing"
+            component={Billing}
+          />
           {/* 
-          <PrivateRoute path="/dashboard/pages" component={Pages} />
           <PrivateRoute
             path="/dashboard/page/select"
             component={TemplateSelect}
