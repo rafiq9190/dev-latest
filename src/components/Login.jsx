@@ -47,6 +47,10 @@ const Login = () => {
     auth
       .signInWithPopup(googleProvider)
       .then((res) => {
+        console.log(
+          '🚀 ~ file: Login.jsx ~ line 50 ~ .then ~ res',
+          res,
+        );
         setUser(res.user);
         navigate('/dashboard');
       })
