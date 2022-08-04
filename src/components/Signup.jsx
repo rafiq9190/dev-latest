@@ -10,7 +10,6 @@ import Toasty from './Toast';
 
 function Signup() {
   const auth = firebase.auth();
-  const [user, setUser] = useState('');
 
   const googleProvider = new firebase.auth.GoogleAuthProvider();
   const [isProcessing, setProcessing] = useState(false);

@@ -20,9 +20,6 @@ const Projects = () => {
   const [dropOpen, setdropOpen] = useState(false);
   const [modalShow, setModalShow] = useState(false);
 
-  const clickHandler = () => {
-    setisOpen(!isOpen);
-  };
   const handlerClick = () => {
     setdropOpen(!dropOpen);
   };
@@ -263,7 +260,7 @@ const Projects = () => {
         </div>
 
         <div className="dashboard-main">
-          <div className="d-flex justify-content-end left-side">
+          {/* <div className="d-flex justify-content-end left-side">
             <div>
               <button className="btn-trail">Start free trail</button>
             </div>
@@ -295,7 +292,7 @@ const Projects = () => {
                 </div>
               ) : null}
             </div>
-          </div>
+          </div> */}
           <div className="template-area">
             <h1 className="mb-3">Templates</h1>
             <div className="template-body">

@@ -31,12 +31,7 @@ const Login = () => {
       const result = await firebase
         .auth()
         .signInWithEmailAndPassword(data.email, data.password);
-      firebase
-        .database()
-        .ref('users/' + result.user.uid)
-        .once('value', (snap) => {
-          setUserExtras(snap.val() || {});
-        });
+
       setUser(result.user);
       navigate('/dashboard');
     } catch (err) {
@@ -88,7 +83,7 @@ const Login = () => {
     <div className="container">
       <div className="row">
         <div
-          className="col-md-6 offset-md-3 my-3"
+          className="col-md-6 offset-md-3 "
           style={{ marginTop: '134px' }}
         >
           <div className="google-auth">
@@ -139,7 +134,7 @@ const Login = () => {
               {!isProcessing ? (
                 ' Sign in'
               ) : (
-                <div className="spinner-grow spinner-grow-sm"></div>
+                <div className="spinner-grow spinner-grow-sm "></div>
               )}
             </div>
           </Form>
